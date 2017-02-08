@@ -1,0 +1,64 @@
+
+
+# Add new items sold to the data base.
+def add_merch_items():
+    ''' This function is to add items sold to the table'''
+    print("\nLet's add some data for the items sold")
+    while True:
+        # size = (input('Enter the size (s, m, m): '))
+        quantity = int(input('Enter the quantity: '))
+        price = float(input('Enter the price per unit: '))
+        total_price = quantity * price
+        # This prints for the user to select what id number to select
+        count = 0  # This is used to count the number of loops in the names.
+        for name in save_inputs.query(Names): # Prints the list of the names
+            print(name)
+            count += 1
+
+        # Here the user asked to select an id from the brand's list
+        assign_name_id = int(input('Asign this info to one of the Names id above: '))
+        # If the user imput is inside the list of brand's id, then is save, otherwise is not.
+        if assign_name_id <= count:
+            MerchandiseItems.name_id = assign_name_id # This assign the right id to the brand
+            new_to_add = MerchandiseItems(quantity = quantity,\
+             price = price, total_price = total_price, name_id = MerchandiseItems.name_id)
+            save_inputs.add_all([new_to_add])
+            save_inputs.commit()
+            print(('Your data was saved to the DB with brand id {}').format(assign_name_id))
+        else:
+            save_inputs.rollback()  # Have to roll back the attempt to set
+            print('Data was not saved, number not in the brand id')
+
+        add_more = input('\nDo you want to add another yersey? Y/N: ')
+        if add_more == 'n'.lower():
+            break
+
+
+
+            # class ItemsQuantityPrice(Base):
+            #
+            #     '''This defines the merchandise_items talbe and their, brand, quantity, sizes, and prize per unit '''
+            #     __tablename__ = 'merchandise_items'
+            #     # id, brand, version, will be the column names, and the have the types specified.
+            #     id = Column(Integer, primary_key = True)
+            #     quantity = Column(Integer, nullable = False)
+            #     price = Column(REAL, nullable = False)
+            #     total_price = Column(REAL)
+            #     # Set up the foreign key connection
+            #     # name_id = Column(Integer, ForeignKey('names.id'), nullable = False)
+            #     # # List of associated objects
+            #     # names = relationship('Names', back_populates = 'merchandise_items')
+            #
+            #     def __repr__(self):
+            #         '''Displays the table with each unit'''
+            #         return 'Product: id = {:<4} quantity = {:<4} price = ${:>6.2f} total_price = ${:>8.2f} name id = {}'\
+            #         .format(self.id, self.quantity, self.price, self.total_price, self.name_id, self.names)
+
+
+
+
+
+            result = dbsession.query(Shares.price, \
+                                        func.sum(Shares.quantity).label("Total sold")) \
+                                        .filter(Shares.company== 'Google') \
+                                        .group_by(Shares.price).all()
