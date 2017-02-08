@@ -2,7 +2,7 @@
 from sqlalchemy.orm import sessionmaker
 from tables_setUp import MerchandiseItems, DatesOfGames, SalesOfItems
 # from sqlalchemy.engine import Engine
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, func, funcfilter
 import time
 
 # This is to save data to tables
@@ -15,23 +15,25 @@ class Add_items_to_tables():
 
         # This function is set up incase the user ones to add a new brand
     def add_merch_items():
-        ''' This is for the names, and it loads some of the items
-        for the user. If the user wants to add another brand this
-        option is available'''
+        ''' This is for the names, and it loads some of the items for the user.
+        If the user wants to add another name, there is an option available'''
         # # This creates the initial names that will be stored in the database.
-        ''' Uncomment this block of code to add item names manualy'''
-        # jerseys = MerchandiseItems(item_name = 'Jerseys')
-        # hats = MerchandiseItems(item_name = 'Hats')
-        # dvds = MerchandiseItems(item_name = 'Dvds') # games of team
-        # save_inputs.add_all([jerseys, hats, dvds])
-        # save_inputs.commit()
+        # Add the initial items.
+        rows_count = save_inputs.query(MerchandiseItems).count()
+        if rows_count == 0: # If not items found when the app first runs
+            save_inputs.bulk_insert_mappings(MerchandiseItems,\
+                                    [dict(item_name = 'Jerseys'),\
+                                    dict(item_name = 'Hats'),\
+                                    dict(item_name = 'Dvds')])
+            save_inputs.commit()
+            # Using bulk_insert
 
         # If the user wants to add a new brand
         print('\nThis is the list of merchandise items')
         for name in save_inputs.query(MerchandiseItems): # Prints the list of the names
             print(name)
         while True:
-            add_more = input('Do you want to add another name? Y/N: ')
+            add_more = input('\nDo you want to add another name? Y/N: ')
             if add_more == 'n'.lower():
                 break
             else:

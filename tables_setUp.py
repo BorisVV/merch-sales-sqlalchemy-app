@@ -26,7 +26,7 @@ class MerchandiseItems(Base):
 
     def __repr__(self):
         ''' Display the names list'''
-        return 'Name: id = {:<2} {:<2}'.format(self.id, self.item_name.capitalize())
+        return ' ID = {:<2} {:<2}'.format(self.id, self.item_name.capitalize())
 
 class SalesOfItems(Base):
     ''' This table is for the items sold in each game'''
