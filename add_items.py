@@ -5,6 +5,7 @@ from tables_setUp import MerchandiseItems, DatesOfGames, SalesOfItems
 from sqlalchemy import create_engine, func, funcfilter
 import time
 
+
 # This is to save data to tables
 engine = create_engine('sqlite:///merchandise_sales.db', echo=False)
 Session = sessionmaker(bind=engine) # Helps set up the database.
@@ -19,8 +20,9 @@ class Add_items_to_tables():
         If the user wants to add another name, there is an option available'''
         # # This creates the initial names that will be stored in the database.
         # Add the initial items.
-        rows_count = save_inputs.query(MerchandiseItems).count()
-        if rows_count == 0: # If not items found when the app first runs
+
+        # Here I am using a function named count_rows check if table is empty.
+        if Add_items_to_tables.count_rows(MerchandiseItems): # If not items found when the app first runs
             save_inputs.bulk_insert_mappings(MerchandiseItems,\
                                     [dict(item_name = 'Jerseys'),\
                                     dict(item_name = 'Hats'),\
@@ -33,7 +35,7 @@ class Add_items_to_tables():
         for name in save_inputs.query(MerchandiseItems): # Prints the list of the names
             print(name)
         while True:
-            add_more = input('\nDo you want to add another name? Y/N: ')
+            add_more = input('\nDo you want to add a new name to the list? Y/N:\n')
             if add_more == 'n'.lower():
                 break
             else:
@@ -56,25 +58,39 @@ class Add_items_to_tables():
 
     def add_dates_cities():
         ''' This adds dates and cities to the table dates of games.'''
-        while True:
-            date = Add_items_to_tables.date_validation()
-            city = input('Enter the name of the city: ')
-            new_date = DatesOfGames(date_of_game = date, city = city)
-            save_inputs.add_all([new_date])
+        # Here I am using a function named count_rows check if table is empty.
+        if Add_items_to_tables.count_rows(DatesOfGames): # If not items found when the app first runs
+            save_inputs.bulk_insert_mappings(DatesOfGames,\
+                    [dict(date_of_game = '02/15/2017', city = 'Burnsville', state = 'MN'),\
+                     dict(date_of_game = '02/20/2017', city = 'Minneapolis', state = 'MN'),\
+                     dict(date_of_game = '03/20/2017', city = 'Lakeville', state = 'MN'),\
+                     dict(date_of_game = '03/25/2017', city = 'Edina', state = 'MN')])
             save_inputs.commit()
-            user_response = input('Do you want to add more dates, cities? Y/N: ')
-            if user_response == 'n':
-                break
+            # Using bulk_insert
+
+            # This is for the user to enter new dates.
+        # while True:
+        #     user_response = input('\nDo you want to add more dates, cities? Y/N: ')
+        #     if user_response == 'n':
+        #         break
+        #     else:
+        #         date = Add_items_to_tables.date_validation()
+        #         city = input('Enter the name of the city:\n')
+        #         state = input('Enter the state like (MN):\n')
+        #         new_date = DatesOfGames(date_of_game = date, city = city, state= state)
+        #         save_inputs.add_all([new_date])
+        #         save_inputs.commit()
 
 
     save_inputs.close()
     Session.close_all()
 
-        # format Date.
+
+        # format Date to make sure user enter the right format.
     def date_validation():
         ''' This validates the date that the user entered. '''
         while True:
-            date = input('Enter the date (mm/dd/yyy): ')
+            date = input('Enter the date (mm/dd/yyy):\n')
             try:
                 # This formats the Date.
                 valid_date = time.strptime(date, '%m/%d/%Y')
@@ -84,3 +100,12 @@ class Add_items_to_tables():
                 print('Invalid data!')
                 continue
         return date
+
+    # This is to check if the table has any data or rows in it.
+    def count_rows(table):
+        zero_rows = True
+        rows_count = save_inputs.query(table).count()
+        if rows_count == 0:
+            return zero_rows
+        else:
+            return zero_rows == False

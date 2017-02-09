@@ -12,7 +12,7 @@ from add_items import Add_items_to_tables
 engine = create_engine('sqlite:///merchandise_sales.db', echo=False)
 Session = sessionmaker(bind = engine)
 
-print('\n##### WELCOME TO THE MERCHANDISE DATABASE #######\n')
+print('\n\n##### WELCOME TO THE MERCHANDISE DATABASE #######\n')
 
 def main():
     MerchandiseItems() # the MerchandiseItems table is loaded
