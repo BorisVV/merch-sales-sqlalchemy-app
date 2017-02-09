@@ -4,7 +4,8 @@ from tables_setUp import MerchandiseItems, DatesOfGames, SalesOfItems
 # from sqlalchemy.engine import Engine
 from sqlalchemy import create_engine, func, funcfilter
 import time
-
+import queries_functions
+import validation_functions
 
 # This is to save data to tables
 engine = create_engine('sqlite:///merchandise_sales.db', echo=False)
@@ -12,6 +13,7 @@ Session = sessionmaker(bind=engine) # Helps set up the database.
 
 
 save_inputs = Session() # This variable is used to add items on all tables.
+
 class Add_items_to_tables():
 
         # This function is set up incase the user ones to add a new brand
@@ -22,7 +24,7 @@ class Add_items_to_tables():
         # Add the initial items.
 
         # Here I am using a function named count_rows check if table is empty.
-        if Add_items_to_tables.count_rows(MerchandiseItems): # If not items found when the app first runs
+        if queries_functions.count_rows(MerchandiseItems): # If not items found when the app first runs
             save_inputs.bulk_insert_mappings(MerchandiseItems,\
                                     [dict(item_name = 'Jerseys'),\
                                     dict(item_name = 'Hats'),\
@@ -59,7 +61,7 @@ class Add_items_to_tables():
     def add_dates_cities():
         ''' This adds dates and cities to the table dates of games.'''
         # Here I am using a function named count_rows check if table is empty.
-        if Add_items_to_tables.count_rows(DatesOfGames): # If not items found when the app first runs
+        if queries_functions.count_rows(DatesOfGames): # If not items found when the app first runs
             save_inputs.bulk_insert_mappings(DatesOfGames,\
                     [dict(date_of_game = '02/15/2017', city = 'Burnsville', state = 'MN'),\
                      dict(date_of_game = '02/20/2017', city = 'Minneapolis', state = 'MN'),\
@@ -69,43 +71,51 @@ class Add_items_to_tables():
             # Using bulk_insert
 
             # This is for the user to enter new dates.
-        # while True:
-        #     user_response = input('\nDo you want to add more dates, cities? Y/N: ')
-        #     if user_response == 'n':
-        #         break
-        #     else:
-        #         date = Add_items_to_tables.date_validation()
-        #         city = input('Enter the name of the city:\n')
-        #         state = input('Enter the state like (MN):\n')
-        #         new_date = DatesOfGames(date_of_game = date, city = city, state= state)
-        #         save_inputs.add_all([new_date])
-        #         save_inputs.commit()
+    def add_more_Dates():
+        while True:
+            user_response = input('-->Do you want to add different date, city and state? Y/N:\n')
+            if user_response == 'n':
+                break
+            else:
+                date = validation_functions.date_validation()
+                exists = save_inputs.query(save_inputs.query(DatesOfGames) \
+                      .filter_by(date_of_game = date) \
+                      .exists()).scalar()
+                if exists:
+                    print('**Warning! \nDate was not added because is already in the list!**')
+                else:
+                    city = input('Enter the name of the city:\n')
+                    state = input('Enter the state like (MN):\n')
+                    new_date = DatesOfGames(date_of_game = date, city = city, state= state)
+                    save_inputs.add_all([new_date])
+                    save_inputs.commit()
+
+
+    def sold_items():
+        ''' This function is to save the items sold for each game '''
+
+        print('\n          Here is the list of games')
+        queries_functions.get_all_fromTable(DatesOfGames) # Prints the games table
+        Add_items_to_tables.add_more_Dates() # Let's the user decide if it wants to add more
+        print('\nLet\'s add some sold item to one of the games on a specific Date \
+                \nSelect the "ID" from one of the dates that you prefer.\n')
+
+        date_id = int(input('Enter the ID number:\n'))
+        queries_functions.get_all_fromTable(MerchandiseItems)
+        item_id = int(input('Enter the ID from the items above:\n'))
+        quantity_sold = int(input('Enter total quantity sold:\n'))
+        price_unit = float(input('Enter the price per unit:\n'))
+        total = float(quantity_sold * price_unit)
+
+        new_sold_item = SalesOfItems(quantity_sold = quantity_sold, \
+            price_per_unit = price_unit, total_price = total, \
+            items_id = item_id, dates_id = date_id)
+
+        save_inputs.add_all([new_sold_item])
+        save_inputs.commit()
+
+
 
 
     save_inputs.close()
     Session.close_all()
-
-
-        # format Date to make sure user enter the right format.
-    def date_validation():
-        ''' This validates the date that the user entered. '''
-        while True:
-            date = input('Enter the date (mm/dd/yyy):\n')
-            try:
-                # This formats the Date.
-                valid_date = time.strptime(date, '%m/%d/%Y')
-                if valid_date: # If Date is formatted correctly, loop breaks
-                    break
-            except:
-                print('Invalid data!')
-                continue
-        return date
-
-    # This is to check if the table has any data or rows in it.
-    def count_rows(table):
-        zero_rows = True
-        rows_count = save_inputs.query(table).count()
-        if rows_count == 0:
-            return zero_rows
-        else:
-            return zero_rows == False

@@ -48,13 +48,13 @@ class SalesOfItems(Base):
     items_id = Column(Integer, ForeignKey('merchandise_items.id'))
     merchandise_items = relationship('MerchandiseItems', back_populates = 'sales_of_items')
 
+    dates_id = Column(Integer, ForeignKey('dates_games.id'))
     dates_games = relationship('DatesOfGames', back_populates = 'sales_of_items')
 
     def __repr__(self):
-        return 'Item sold id: {:<2} quantity sold = {:<10} price each = {:>5} \
-                total sale = ${:>5} item id = {}'\
-                .format(self.id, self.merchandise_items, self.price_per_unit, \
-                self.total_price, self.items_id, self.merchandise_items) #self.merchandise_items, self.sales_of_items)
+        return 'Item sold id: {:<2} quantity sold = {:<4} price each = {:<5} total sale = ${:<6} item id = {} date id = {}'\
+                .format(self.id, self.quantity_sold, self.price_per_unit, \
+                self.total_price, self.items_id, self.dates_id) #self.merchandise_items, self.sales_of_items)
 
 
 class DatesOfGames(Base):
@@ -66,20 +66,20 @@ class DatesOfGames(Base):
     city = Column(String(50), nullable = False)
     state = Column(String(50), nullable = False)
 
-    sales_id = Column(Integer, ForeignKey('sales_of_items.id'))
-    sales_of_items = relationship('SalesOfItems', back_populates = 'dates_games')
+    # sales_id = Column(Integer, ForeignKey('sales_of_items.id'))
 
     item_name_id = Column(Integer, ForeignKey('merchandise_items.id'))
     merchandise_items = relationship('MerchandiseItems', back_populates = 'dates_games')
+    sales_of_items = relationship('SalesOfItems', back_populates = 'dates_games')
 
 
     # sales_of_items = relationship('SalesOfItems', back_populates = 'dates_games')
     def __repr__(self):
-        return ' ID = {:}  Date = {:<11} City = {:<12} State = {} Sales ID = {} Item_name ID {}'\
+        return ' ID = {:}  Date = {:<11} City = {:<12} State = {}  Item_name ID {}'\
         .format(self.id, self.date_of_game, self.city.capitalize(), \
-        self.state, self.sales_id, self.item_name_id, self.sales_of_items, self.merchandise_items)
+        self.state,  self.item_name_id,  self.merchandise_items)
 
-
+# self.sales_id, self.sales_of_items,
 
 Base.metadata.create_all(engine)
 
