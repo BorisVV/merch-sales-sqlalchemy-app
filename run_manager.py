@@ -29,10 +29,11 @@ def main():
     Add_items_to_tables.sold_items()
 
     print()
+    print('\n   This is the list of all the items sold1')
     queries_functions.get_all_fromTable(SalesOfItems)
     print()
 
-    queries_functions.get_sum_sold_items(DatesOfGames,SalesOfItems)
+    queries_functions.get_sum_sold_items(SalesOfItems)
 
     Session().close()
 
@@ -40,6 +41,6 @@ def main():
 if __name__ == '__main__':
     while True:
         main()
-        resp = input('Do you want to continue or exit? Y/N: ')
+        resp = input('Do you want to continue? Y/N: ')
         if resp == 'n'.lower():
             break

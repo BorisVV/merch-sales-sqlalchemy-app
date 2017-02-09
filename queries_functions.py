@@ -16,9 +16,15 @@ def get_all_fromTable(table):
     for items in Session().query(table):
         print(items)
 
-def get_sum_sold_items(table1, table2):
-    pass
-    
+def get_sum_sold_items(table1):
+    sum_session = Session()
+    sum_sold = sum_session.query(func.sum(table1.quantity_sold)).filter_by(dates_id = 2)
+
+    print(sum_sold)
+    for i in sum_sold:
+        print(i)
+    sum_session.close()
+
 Session().close()
 
 

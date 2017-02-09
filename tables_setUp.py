@@ -52,7 +52,7 @@ class SalesOfItems(Base):
     dates_games = relationship('DatesOfGames', back_populates = 'sales_of_items')
 
     def __repr__(self):
-        return 'Sales-id: {:<2} qty-sold = {:<4} price = {:<5} total-sale = ${:<6} name-id = {} date-id = {}'\
+        return 'Sales-id: {:<2} qty-sold = {:<4} price = {:<5} total-sale = ${:>6} name-id = {} date-id = {}'\
                 .format(self.id, self.quantity_sold, self.price_per_unit, \
                 self.total_price, self.items_id, self.dates_id) #self.merchandise_items, self.sales_of_items)
 
