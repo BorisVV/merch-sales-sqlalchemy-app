@@ -6,6 +6,8 @@ from sqlalchemy.engine import Engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine, func, alias
 
+from tables_setUp import SalesOfItems, DatesOfGames
+
 engine = create_engine('sqlite:///merchandise_sales.db', echo=False)
 Session = sessionmaker(bind = engine)
 
@@ -18,11 +20,17 @@ def get_all_fromTable(table):
 
 def get_sum_sold_items(table1):
     sum_session = Session()
-    sum_sold = sum_session.query(func.sum(table1.quantity_sold)).filter_by(dates_id = 2)
 
-    print(sum_sold)
-    for i in sum_sold:
-        print(i)
+    games = sum_session.query(DatesOfGames)
+
+    for game in games:
+
+        print(game.id)
+        sum_sold = sum_session.query(func.sum(table1.quantity_sold)).filter_by(dates_id=game.id).one()
+        print(sum_sold)
+
+    # for i in sum_sold:
+    #     print(i)
     sum_session.close()
 
 Session().close()
