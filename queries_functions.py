@@ -4,7 +4,7 @@
 
 from sqlalchemy.engine import Engine
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy import create_engine, func, alias
+from sqlalchemy import create_engine, func, alias, desc, asc
 
 from tables_setUp import SalesOfItems, DatesOfGames
 
@@ -12,29 +12,19 @@ engine = create_engine('sqlite:///merchandise_sales.db', echo=False)
 Session = sessionmaker(bind = engine)
 
 
-
-
 def get_all_fromTable(table):
     for items in Session().query(table):
         print(items)
 
-def get_sum_sold_items(table1):
+def get_sum_sold_items():
     sum_session = Session()
-
     games = sum_session.query(DatesOfGames)
-
     for game in games:
-
-        print(game.id)
-        sum_sold = sum_session.query(func.sum(table1.quantity_sold)).filter_by(dates_id=game.id).one()
-        print(sum_sold)
-
-    # for i in sum_sold:
-    #     print(i)
+        sum_sold = sum_session.query(func.sum(SalesOfItems.quantity_sold)).filter_by(dates_id = game.id).one()[0]
+        print('Date {:<12} City: {:<12} Sum: {} '.format(game.date_of_game, game.city, sum_sold))
     sum_session.close()
 
 Session().close()
-
 
 
 # This is to check if the table has any data or rows in it.

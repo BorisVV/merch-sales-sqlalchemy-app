@@ -33,8 +33,7 @@ def main():
     queries_functions.get_all_fromTable(SalesOfItems)
     print()
 
-    queries_functions.get_sum_sold_items(SalesOfItems)
-
+    queries_functions.get_sum_sold_items()
     Session().close()
 
 
