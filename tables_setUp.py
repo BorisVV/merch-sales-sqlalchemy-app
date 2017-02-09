@@ -52,7 +52,7 @@ class SalesOfItems(Base):
     dates_games = relationship('DatesOfGames', back_populates = 'sales_of_items')
 
     def __repr__(self):
-        return 'Item sold id: {:<2} quantity sold = {:<4} price each = {:<5} total sale = ${:<6} item id = {} date id = {}'\
+        return 'Sales-id: {:<2} qty-sold = {:<4} price = {:<5} total-sale = ${:<6} name-id = {} date-id = {}'\
                 .format(self.id, self.quantity_sold, self.price_per_unit, \
                 self.total_price, self.items_id, self.dates_id) #self.merchandise_items, self.sales_of_items)
 
@@ -77,22 +77,7 @@ class DatesOfGames(Base):
     def __repr__(self):
         return ' ID = {:}  Date = {:<11} City = {:<12} State = {}  Item_name ID {}'\
         .format(self.id, self.date_of_game, self.city.capitalize(), \
-        self.state,  self.item_name_id,  self.merchandise_items)
+        self.state,  self.item_name_id)
 
-# self.sales_id, self.sales_of_items,
 
 Base.metadata.create_all(engine)
-
-
-
-
-# time_created = Column(DateTime(timezone=True), server_default=func.now())
-# time_updated = Column(DateTime(timezone=True), onupdate=func.now())
-# from datetime import datetime
-# dt = datetime(2001, 2, 3, 4, 5)
-# New
-#
-# '{:{dfmt} {tfmt}}'.format(dt, dfmt='%Y-%m-%d', tfmt='%H:%M')
-# Output
-#
-# 2001-02-03 04:05

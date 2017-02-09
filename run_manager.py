@@ -9,7 +9,7 @@ from tables_setUp import MerchandiseItems, DatesOfGames, SalesOfItems
 from add_items import Add_items_to_tables
 import queries_functions
 
-all_rows = queries_functions
+queries_functions
 
 
 engine = create_engine('sqlite:///merchandise_sales.db', echo=False)
@@ -22,18 +22,24 @@ def main():
     DatesOfGames() # Load the date of games table
     SalesOfItems() # Loas the sales table
 
-    # Add_items_to_tables.add_merch_items()
-    # Add_items_to_tables.add_dates_cities()
-    #
-    # all_rows.get_all_fromTable(MerchandiseItems)
-    # Add_items_to_tables.sold_items()
+    Add_items_to_tables.add_merch_items()
+    Add_items_to_tables.add_dates_cities()
+
+    queries_functions.get_all_fromTable(MerchandiseItems)
+    Add_items_to_tables.sold_items()
 
     print()
-    all_rows.get_all_fromTable(SalesOfItems)
+    queries_functions.get_all_fromTable(SalesOfItems)
+    print()
 
+    queries_functions.get_sum_sold_items(DatesOfGames,SalesOfItems)
 
     Session().close()
 
 
 if __name__ == '__main__':
-    main()
+    while True:
+        main()
+        resp = input('Do you want to continue or exit? Y/N: ')
+        if resp == 'n'.lower():
+            break

@@ -4,7 +4,7 @@
 
 from sqlalchemy.engine import Engine
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, func, alias
 
 engine = create_engine('sqlite:///merchandise_sales.db', echo=False)
 Session = sessionmaker(bind = engine)
@@ -16,7 +16,9 @@ def get_all_fromTable(table):
     for items in Session().query(table):
         print(items)
 
-
+def get_sum_sold_items(table1, table2):
+    pass
+    
 Session().close()
 
 
