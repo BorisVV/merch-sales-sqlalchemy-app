@@ -4,7 +4,7 @@ from sqlalchemy import ForeignKey, event, create_engine, Column,\
                     Integer, String, Numeric, Date, Time
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.engine import Engine
-from sqlalchemy.orm import relationship, sessionmaker
+from sqlalchemy.orm import relationship, sessionmaker, backref
 
 
 # This block set up the relationship between tables.
@@ -29,9 +29,9 @@ class MerchandiseItems(Base):
     item_name = Column(String(50), nullable = False)
 
     # This table has a relationship with the sales_of_items table.
-    sales_of_items = relationship('SalesOfItems', back_populates = 'merchandise_items')
+    sales_of_items = relationship('SalesOfItems', back_populates = 'merchandise_items', cascade='delete,all')
     # This has a relationship wiht the dates_games table.
-    dates_games = relationship('DatesOfGames', back_populates = 'merchandise_items')
+    dates_games = relationship('DatesOfGames', back_populates = 'merchandise_items', cascade='delete,all')
 
     def __repr__(self):
         ''' Display the names list'''
@@ -50,7 +50,8 @@ class SalesOfItems(Base):
 
     # Relationship setup
     items_id = Column(Integer, ForeignKey('merchandise_items.id'))
-    merchandise_items = relationship('MerchandiseItems', back_populates = 'sales_of_items')
+    merchandise_items = relationship('MerchandiseItems', back_populates = 'sales_of_items', cascade='delete,all')
+    # merchandise_items = relationship('MerchandiseItems', backref=backref('sales_of_items', uselist=True, cascade='delete,all'))
 
     dates_id = Column(Integer, ForeignKey('dates_games.id'))
     # This table has a relationship wiht the dates_games table.

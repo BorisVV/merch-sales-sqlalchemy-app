@@ -5,7 +5,7 @@ from tables_setUp import MerchandiseItems, DatesOfGames, SalesOfItems
 from sqlalchemy import create_engine, func, funcfilter
 import time
 import queries_functions
-import validation_functions
+from validation_functions import Validations
 from eng_sess_base_setUP import E_S_B
 
 # This is to save data to tables
@@ -79,7 +79,7 @@ class Add_items_to_tables():
             if user_response == 'n'.lower():
                 break
             else:
-                date = validation_functions.date_validation()
+                date = Validations.date_validation()
                 exists = save_inputs.query(save_inputs.query(DatesOfGames) \
                       .filter_by(date_of_game = date) \
                       .exists()).scalar()
@@ -106,11 +106,11 @@ class Add_items_to_tables():
                 break
             else:
                 print('\nLet\'s add some sold item to one of the games on a specific Date \nSelect the "ID" from one of the dates above.')
-                date_id = int(input('-->Enter the ID number:\n'))
+                date_id = Validations.int_validation('-->Enter the ID number:\n')
                 queries_functions.get_all_fromTable(MerchandiseItems)
-                item_id = int(input('-->Enter the ID from the items above:\n'))
-                quantity_sold = int(input('-->Enter total quantity sold:\n'))
-                price_unit = float(input('-->Enter the price per unit:\n'))
+                item_id = Validations.int_validation('-->Enter the ID from the items above:\n')
+                quantity_sold = Validations.int_validation('-->Enter total quantity sold:\n')
+                price_unit = Validations.float_validation('-->Enter the price per unit:\n')
                 total = float(quantity_sold * price_unit)
 
                 new_sold_item = SalesOfItems(quantity_sold = quantity_sold, \

@@ -33,7 +33,7 @@ def main():
     queries_functions.get_all_fromTable(SalesOfItems)
     print()
 
-    print('\n#This are the total items sold by the games dates!')
+    print('\n#This are the total items sold by each date!')
     queries_functions.get_sum_sold_items()
     Session().close()
 
