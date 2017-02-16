@@ -6,10 +6,12 @@ from sqlalchemy import create_engine, func, funcfilter
 import time
 import queries_functions
 import validation_functions
+from eng_sess_base_setUP import E_S_B
 
 # This is to save data to tables
-engine = create_engine('sqlite:///merchandise_sales.db', echo=False)
-Session = sessionmaker(bind=engine) # Helps set up the database.
+engine = E_S_B.engine
+Session = E_S_B.Session
+
 
 
 save_inputs = Session() # This variable is used to add items on all tables.

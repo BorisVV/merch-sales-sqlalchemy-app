@@ -1,16 +1,20 @@
 
-''' This function are to get information and have less code written for each
-    of the for loops or queries '''
 
 from sqlalchemy.engine import Engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine, func, alias, desc, asc
 
 from tables_setUp import SalesOfItems, DatesOfGames
+from eng_sess_base_setUP import E_S_B
 
-engine = create_engine('sqlite:///merchandise_sales.db', echo=False)
-Session = sessionmaker(bind = engine)
-
+# engine = create_engine('sqlite:///merchandise_sales.db', echo=False)
+# Session = sessionmaker(bind = engine)
+engine = E_S_B.engine
+Session = E_S_B.Session
+'''
+    This function are to get information and have less code written for each
+    of the for loops or queries
+'''
 
 def get_all_fromTable(table):
     for items in Session().query(table):

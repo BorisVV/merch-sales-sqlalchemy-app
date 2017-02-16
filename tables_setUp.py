@@ -7,13 +7,15 @@ from sqlalchemy.engine import Engine
 from sqlalchemy.orm import relationship, sessionmaker
 
 
-
+# This block set up the relationship between tables.
 @event.listens_for(Engine, "connect")
 def set_sqlite_pragma(dbapi_connection, connection_record):
     cursor = dbapi_connection.cursor()
     cursor.execute("PRAGMA foreign_keys=ON")
     cursor.close()
 
+# This set up the Base for the classes, engine to communicate with the db, and Session
+# to bind the engine (open and close the sessions.)
 Base = declarative_base()
 engine = create_engine('sqlite:///merchandise_sales.db', echo = False)
 Session = sessionmaker(bind=engine) # Helps set up the database.
@@ -24,9 +26,11 @@ class MerchandiseItems(Base):
     # Name of table
     __tablename__ = 'merchandise_items'
     id = Column(Integer, primary_key = True)
-    item_name = Column(String(50), index = True)
+    item_name = Column(String(50), nullable = False)
 
+    # This table has a relationship with the sales_of_items table.
     sales_of_items = relationship('SalesOfItems', back_populates = 'merchandise_items')
+    # This has a relationship wiht the dates_games table.
     dates_games = relationship('DatesOfGames', back_populates = 'merchandise_items')
 
     def __repr__(self):
@@ -49,6 +53,7 @@ class SalesOfItems(Base):
     merchandise_items = relationship('MerchandiseItems', back_populates = 'sales_of_items')
 
     dates_id = Column(Integer, ForeignKey('dates_games.id'))
+    # This table has a relationship wiht the dates_games table.
     dates_games = relationship('DatesOfGames', back_populates = 'sales_of_items')
 
     def __repr__(self):
@@ -69,6 +74,7 @@ class DatesOfGames(Base):
     # sales_id = Column(Integer, ForeignKey('sales_of_items.id'))
 
     item_name_id = Column(Integer, ForeignKey('merchandise_items.id'))
+    # Ralashionships with merchandise_items and the sales_of_items tables.
     merchandise_items = relationship('MerchandiseItems', back_populates = 'dates_games')
     sales_of_items = relationship('SalesOfItems', back_populates = 'dates_games')
 
