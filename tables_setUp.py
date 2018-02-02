@@ -5,6 +5,7 @@ from sqlalchemy import ForeignKey, event, create_engine, Column,\
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.engine import Engine
 from sqlalchemy.orm import relationship, sessionmaker, backref
+from exceptions import ValueError
 
 
 # This block set up the relationship between tables.
@@ -20,13 +21,12 @@ Base = declarative_base()
 engine = create_engine('sqlite:///merchandise_sales.db', echo = False)
 Session = sessionmaker(bind=engine) # Helps set up the database.
 
-
 class MerchandiseItems(Base):
-    ''' This class is for the brand for the merchandises'''
+    ''' This class is for the  for the merchandises'''
     # Name of table
-    __tablename__ = 'merchandise_items'
+    __tablename__ = 'merchandise'
     id = Column(Integer, primary_key = True)
-    item_name = Column(String(50), nullable = False)
+    item_name = Column(String(50), nullable = False) # example shoes
 
     # This table has a relationship with the sales_of_items table.
     sales_of_items = relationship('SalesOfItems', back_populates = 'merchandise_items', cascade='delete,all')
