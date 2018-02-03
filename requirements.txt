@@ -1,3 +1,5 @@
 #  install -r requirements.txt --no-index --find-links file:///tmp/packages
 
 sqlalchemy-1.2.2
+flask
+Jinja2
