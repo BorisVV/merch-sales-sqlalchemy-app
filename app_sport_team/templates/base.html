@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    {% if title %}
+      <title>{{ title }}</title>
+    {% else %}
+      <title>{% block title %}Welcome{% endblock %}</title>
+    {% endif %}
+  </head>
+  <body>
+    <ul>
+      <a href="{{ url_for('home') }}">Go back home</a>
+    </ul>
+    <div id="body_title" class="box">
+      {% block body_title %}
+        <h1>Welcome</h1>
+        <h2>This is the Sports Team database</h2>
+        <hr>
+      {% endblock %}
+    </div>
+    <div id="content" class="box">
+      {% block content %}
+      {% endblock %}
+    </div>
+  </body>
+</html>
