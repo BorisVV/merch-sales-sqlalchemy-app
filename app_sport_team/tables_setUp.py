@@ -1,6 +1,5 @@
 import sqlite3
 from datetime import date
-
 from sqlalchemy.engine import Engine
 from sqlalchemy import ForeignKey,\
                        event,\
@@ -14,12 +13,9 @@ from sqlalchemy.orm import relationship,\
                            sessionmaker,\
                            scoped_session
 from sqlalchemy.ext.declarative import declarative_base
-
 from flask import url_for, Markup
-from app_sport_team import app
 
-# app = Flask(__name__)
-# app.config.from_object('web_config')
+from app_sport_team import app
 
 # This block set up the relationship between tables for the ForeignKey.
 @event.listens_for(Engine, "connect")
@@ -48,14 +44,14 @@ class MerchandiseItems(Base):
     name = Column(String(50), nullable = False)
 
     # This table has a relationship with the sales_of_items table.
-    sales_of_items = relationship('SalesOfItems', back_populates = 'merchandise_items') #, cascade='all, delete-orphan', passive_deletes = True)
-    # # This has a relationship wiht the dates_games table.
-    # dates_games = relationship('DatesOfGames', back_populates = 'merchandise_items',\
-    #                             cascade='all, delete-orphan', passive_deletes = True)
+    sales_of_items = relationship('SalesOfItems', back_populates = 'merchandise_items')
+    # Another option.
+    # merchandise_items = relationship('MerchandiseItems', backref=backref('sales_of_items', uselist=True, cascade='delete,all'))
+    # cascade='all, delete-orphan', single_parent=True, passive_deletes=True)
 
     def __repr__(self):
         ''' Display the names list'''
-        return ' ID = {:<2} {:<2}'.format(self.id, self.item_name.capitalize())
+        return '{}'.format(self.name.capitalize())
 
 
 
@@ -69,19 +65,9 @@ class SalesOfItems(Base):
     quantity_sold = Column(Integer, nullable = False)
     price_per_unit = Column(Float(2))
 
-
-    # total_price = Column(Numeric(12, 2))
-    # Relationship setup
-    # items_id = Column(Integer, ForeignKey('merchandise_items.id')) # ondelete='CASCADE'
-    # merchandise_items = relationship('MerchandiseItems', back_populates='sales_of_items')
-    # cascade='all, delete-orphan', single_parent = True, passive_deletes = True)
-    # Another option.
-    # merchandise_items = relationship('MerchandiseItems', backref=backref('sales_of_items', uselist=True, cascade='delete,all'))
-
     # tables relations.
-    merchandise_items = relationship('MerchandiseItems', back_populates='sales_of_items')
+    merchandise_items = relationship('MerchandiseItems', back_populates='sales_of_items') # ondelete='CASCADE'
     games_schedules = relationship('DatesOfGames', back_populates='sales_of_items')
-    # cascade='all, delete-orphan', single_parent=True, passive_deletes=True)
 
     def __repr__(self):
         return 'Sales-id: {:<2} qty-sold = {:<4} price = {:<5} total-sale = ${:>6} name-id = {} date-id = {}'\
@@ -90,7 +76,7 @@ class SalesOfItems(Base):
 
 
 class DatesOfGames(Base):
-    ''' This will store hte game's dates table'''
+    ''' This will store the game's dates table'''
     __tablename__ = 'games_schedules'
     # Add columns
     id = Column(Integer, primary_key = True)
@@ -99,11 +85,6 @@ class DatesOfGames(Base):
     state = Column(String(50))
 
     sales_of_items = relationship('SalesOfItems', back_populates = 'games_schedules')
-
-    # item_name_id = Column(Integer, ForeignKey('merchandise_items.id'))
-    # # Ralashionships with merchandise_items and the sales_of_items tables.
-    # merchandise_items = relationship('MerchandiseItems', back_populates = 'dates_games')
-    # sales_of_items = relationship('SalesOfItems', back_populates = 'dates_games', cascade='all, delete-orphan', passive_deletes = True)
 
     def __repr__(self):
         return ' ID = {:}  Date = {:<11} City = {:<12} State = {}  Item_name ID {}'\

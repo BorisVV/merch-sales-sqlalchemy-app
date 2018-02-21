@@ -1,17 +1,17 @@
-{% extends "base.html" %}
-{% block title %}Add items{% endblock %}
-{% block body_title%}{% endblock %}
-{% block content %}
-<h1>Add new items to database, item name and price.</h1>
-  <form method=post>
-    <div class="form-group">
-      <label for="ItemName">Item name:</label>
-      <input type="text" class="form-control" aria-describedby="nameHelp" placeholder="name">
-    </div>
-    <div class="form-group">
-      <label for="Price">Item price:</label>
-      <input type="float" class="form-control" placeholder="price 0.00">
-    </div>
-    <button type="submit" name="Submit" class="btn btn-primary">Submit</button>
+{% extends "home.html" %}
+
+<!-- {% block title %}{% endblock %} -->
+
+{% block add_edit %}
+<h1>Add new items to database, item name.</h1>
+  <form action="{{ addItems }}" method=post>
+    <dl>
+      <dt>Name:</dt>
+      <dd><input type="text" name="name" value="{{ request.values.name }}" size="30">
+      </dd>
+    </dl>
+    <p>
+    <input type="submit" name="continue"  value="Save">
+    <input type="submit" name="cancel" value="Cancel">
   </form>
 {% endblock %}

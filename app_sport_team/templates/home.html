@@ -1,8 +1,22 @@
 {% extends "base.html" %}
 
+{% block title %}
+  <h2>This is the home page!</h2>
+{% endblock %}
+
 {% block content %}
+  <p>List of items</p>
+  {% for item in items %}
+  <li>{{ item|e }}</li>
+  {% endfor %}
+<div class="">
   <h2>Select from below</h2>
   <ul>
-    <li><a href="{{ url_for('add') }}"> Add</a></li>
+    <li><a href="{{ url_for('addItems') }}"> Add an Item</a></li>
+    <li><a href="{{ url_for('edit') }}"> Edit/elete an Item</a></li>
   </ul>
+  {% block add_edit %}{% endblock %}
+</div>
 {% endblock %}
+
+{% block footer %}{% endblock %}

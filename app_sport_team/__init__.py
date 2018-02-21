@@ -1,7 +1,14 @@
-from flask import Flask, session, g, render_template
+from flask import Flask, session, g, render_template, current_app
 
 app = Flask(__name__)
+
 app.config.from_object('web_config')
+
+@app.teardown_appcontext
+def teardown_db(exception):
+    # db_session = getattr(g, app.config['SQLALCHEMY_DATABASE_URI'], None)
+    if db_session is None:
+        db_session.close()
 
 @app.teardown_request
 def remove_db_session(exception):
