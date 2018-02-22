@@ -70,9 +70,7 @@ class SalesOfItems(Base):
     games_schedules = relationship('DatesOfGames', back_populates='sales_of_items')
 
     def __repr__(self):
-        return 'Sales-id: {:<2} qty-sold = {:<4} price = {:<5} total-sale = ${:>6} name-id = {} date-id = {}'\
-                .format(self.id, self.quantity_sold, self.price_per_unit, \
-                self.total_price, self.items_id, self.dates_id) #self.merchandise_items, self.sales_of_items)
+        return "{} {}".format(self.quantity_sold, self.price_per_unit)
 
 
 class DatesOfGames(Base):
@@ -87,8 +85,5 @@ class DatesOfGames(Base):
     sales_of_items = relationship('SalesOfItems', back_populates = 'games_schedules')
 
     def __repr__(self):
-        return ' ID = {:}  Date = {:<11} City = {:<12} State = {}  Item_name ID {}'\
-        .format(self.id, self.date_of_game, self.city.capitalize(), \
-        self.state,  self.item_name_id)
-
+        return "{} {} {}".format(self.game_date, self.city, self.state)
 init_db()

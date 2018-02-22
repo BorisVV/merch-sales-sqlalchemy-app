@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}{% endblock %}
+
+{% block content %}
+  <div class="container">
+    <p>Testing this page</p>
+    <table>
+      {%- for row in dates %}
+        <tr>
+          <td>{{ row }}</td>
+        </tr>
+    {%- endfor %}
+    </table>
+  </div>
+{% endblock %}

@@ -5,18 +5,31 @@
 {% endblock %}
 
 {% block content %}
-  <p>List of items</p>
-  {% for item in items %}
-  <li>{{ item|e }}</li>
-  {% endfor %}
-<div class="">
-  <h2>Select from below</h2>
-  <ul>
-    <li><a href="{{ url_for('addItems') }}"> Add an Item</a></li>
-    <li><a href="{{ url_for('edit') }}"> Edit/elete an Item</a></li>
-  </ul>
-  {% block add_edit %}{% endblock %}
-</div>
+  <style media="screen">
+    table, td {
+      border: 1px solid black
+    }
+  </style>
+
+  <div class="tables">
+    <table>
+      {% for row in items %}
+        <tr>
+          <td>{{ row }}</td>
+        </tr>
+      {% endfor %}
+    </table>
+  </div>
+
+  <div class="">
+    <h2>Select from below</h2>
+    <ul>
+      <li><a href="{{ url_for('addItems') }}"> Add an Item </a></li>
+      <li><a href="{{ url_for('editItems') }}"> Edit/delete Items </a></li>
+      <li><a href="{{ url_for('show_dates') }}">Show games dates </a></li>
+      <li><a href="{{ url_for('addDates') }}"> Add Dates for Games </a></li>
+    </ul>
+  </div>
 {% endblock %}
 
 {% block footer %}{% endblock %}

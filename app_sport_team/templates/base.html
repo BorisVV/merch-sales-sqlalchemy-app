@@ -1,29 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    {% block head %}
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    {% if title %}
-      <title>{{ title }}</title>
-    {% else %}
-      {% block title %}
-        <title>Welcome</title>
-        <a href="{{ url_for('base') }}"></a>
-        <div id="baseDisplay" class="box">
-          <h1>Welcome</h1>
-          <h2>This is the Sports Team database</h2>
-          <hr>
-        </div>
-      {% endblock %}
-    {% endif %}
+    <script type=text/javascript
+src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
+    {% endblock %}
+
+    {% block title %}
+      {% if title %}
+        <title>{{ title }}</title>
+      {% else %}
+          <title>Welcome</title>
+          <a href="{{ url_for('base') }}"></a>
+          <div id="baseDisplay" class="box">
+            <h1>Welcome</h1>
+            <h2>This is the Sports Team database</h2>
+            <hr>
+          </div>
+      {% endif %}
+    {% endblock %}
   </head>
 
   <body>
-    <div id="content" class="box">
-      {% block content %}
-      {% endblock %}
-    </div>
+      {% block content %} {% endblock %}
   </body>
 
   <footer>

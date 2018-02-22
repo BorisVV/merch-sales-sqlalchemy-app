@@ -1,17 +1,15 @@
-{% extends "home.html" %}
+{% extends "base.html" %}
+{% block title %}{% endblock %}
 
-<!-- {% block title %}{% endblock %} -->
-
-{% block add_edit %}
-<h1>Add new items to database, item name.</h1>
-  <form action="{{ addItems }}" method=post>
-    <dl>
-      <dt>Name:</dt>
-      <dd><input type="text" name="name" value="{{ request.values.name }}" size="30">
-      </dd>
-    </dl>
-    <p>
-    <input type="submit" name="continue"  value="Save">
-    <input type="submit" name="cancel" value="Cancel">
-  </form>
+{% block content %}
+  <h1>Add new items to database.</h1>
+    <form action="{{ addItems }}" method=post>
+      <dl>
+        <dt>Enter the item's name:</dt>
+        <input type="text" name="name" value="{{ name }}" size="30">
+        <p>
+        <input type="submit" name="save"  value="Save">
+        <input type="submit" name="cancel" value="Cancel">
+      </dl>
+    </form>
 {% endblock %}
