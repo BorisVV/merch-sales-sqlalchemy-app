@@ -5,11 +5,11 @@
   <div class="container">
     <p>Testing this page</p>
     <table>
-      {%- for row in dates %}
+      {% for element in dates %}
         <tr>
-          <td>{{ row }}</td>
+          <td>{{ element|e }}</td>
         </tr>
-    {%- endfor %}
+      {% endfor %}
     </table>
   </div>
 {% endblock %}

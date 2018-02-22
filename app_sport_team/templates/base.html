@@ -24,8 +24,25 @@ src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
     {% endblock %}
   </head>
 
+
   <body>
-      {% block content %} {% endblock %}
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <ul class=flashes>
+          {% for message in messages %}
+            <li>{{ message }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+
+    <style media="screen">
+      table, tr {
+        border: 1px dotted black
+      }
+    </style>
+
+    {% block content %} {% endblock %}
   </body>
 
   <footer>

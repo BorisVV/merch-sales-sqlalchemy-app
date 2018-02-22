@@ -27,7 +27,7 @@ from app_sport_team.views import routes
 #etc
 
 def format_date(dt):
-    return dt.strftime('%m-%d-%Y')
+    return dt.strfdate('%m-%d-%Y')
 
 from app_sport_team.tables_setUp import db_session, MerchandiseItems, SalesOfItems, DatesOfGames
 

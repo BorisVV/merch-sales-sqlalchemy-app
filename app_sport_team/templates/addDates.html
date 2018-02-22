@@ -2,37 +2,31 @@
 {% block title %}{% endblock %}
 
 {% block content %}
-  <h2>Here is a table of game dates </h2>
-  <div class="tables">
+  <form action="{{ addDates }}" method="post">
+    <h2>Here is a table of game dates </h2>
     {% if items|length() == 0 %}
-        <p>No game dates yet!</p>
-    {% else %}
+    <p>No game dates yet!<br>
+      Do you want to add some?</p>
+      {% else %}
       <table>
         {% for row in items %}
-          <tr>
-            <td>{{ row }}</td>
-          </tr>
+        <tr>
+          <td>{{ row|safe }}</td>
+        </tr>
         {% endfor %}
       </table>
-    {% endif %}
-  </div>
-
-  <div class="container">
-    <h1>Add date, city, and state </h1>
-    <form class="{{ addDates }}" method="post">
-      <dl><dt>Enter date </dt>
-        <input type="date" name="date" value="{{ form.date }}" size="20">
-      </dl>
-      <dl><dt>Enter City</dt>
-        <input type="text" name="city" value="{{ form.city }}" size="20">
-      </dl>
-      <dl><dt>Enter State (e.g. MN)</dt>
-        <input type="text" name="state" value="{{ form.state }}" size="2" max="2">
-      </dl>
-      <p>
-      <input type="submit" name="save" value="Save">
-      <input type="submit" name="cancel" value="Cancel">
-    </form>
-  </div>
-
+      {% endif %}
+      <h1>Add date, city, and state </h1>
+    <dl>
+      <dt>Enter date:</dt>
+        <dd><input type="date" name="date_game" value="" size="20"></dd>
+      <dt>Enter City:</dt>
+        <dd><input type="text" name="city" value="" size="20"></dd>
+      <dt>Enter State: (e.g. MN)</dt>
+        <dd><input type="text" name="state" value="" size="2" max="2"></dd>
+        <br>
+        <dd><input type="submit" name="save" value="Save"></dd>
+        <dd><input type="submit" name="cancel" value="Cancel"></dd>
+    </dl>
+  </form>
 {% endblock %}

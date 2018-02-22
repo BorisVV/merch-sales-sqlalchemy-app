@@ -1,9 +1,11 @@
-from flask import render_template, redirect, url_for, g, abort, request, flash
+
+from datetime import date
+from flask import \
+        render_template, redirect, url_for, g, abort, request, flash
+
 from app_sport_team import app
-from app_sport_team.tables_setUp import db_session, \
-                                        MerchandiseItems, \
-                                        SalesOfItems, \
-                                        DatesOfGames
+from app_sport_team.tables_setUp import \
+            db_session, MerchandiseItems, SalesOfItems, DatesOfGames
 
 
 @app.route('/')
@@ -12,41 +14,35 @@ def base():
 
 @app.route('/home/')
 def home():
-    return render_template('home.html', items = MerchandiseItems.query.all())
+    items = MerchandiseItems.query.all()
+    return render_template('home.html', items=items)
 
-@app.route('/home/add_items', methods=['GET', 'POST'])
+@app.route('/add_items/', methods=['GET', 'POST'])
 def addItems():
+    items = MerchandiseItems.query.all()
     if request.method == 'POST':
-        new_item = request.form['name']
+        new_name = request.form['name'].capitalize()
         if 'cancel' in request.form:
             return redirect(url_for('home'))
 
-        else:
-            if new_item != "":
-                db_session.add(MerchandiseItems(name=new_item))
-                db_session.commit()
-                return redirect(url_for('home'))
-    return render_template('addItems.html', items = MerchandiseItems.query.all())
-
-@app.route('/home/add_dates', methods=['GET', 'POST'])
-def addDates():
-    dates = DatesOfGames.query.all()
-    form = dict(date='date', city='city', state='state')
-    if request.form == 'POST':
-        form['date'] = request.form['date']
-        form['city'] = request.form['city']
-        form['state'] = request.form['state']
-
-        if 'cancel' in request.form:
-            return redirect(url_for('home'))
-
-        else:
-            db_session.add(DatesOfGames(game_date=str(form['date']), city=form['city'], state=form['state']))
+        isIn = False
+        for name in items:
+            if new_name == name.name:
+                flash(u'That name is already in file. \nTry a different one')
+                isIn = True
+                return redirect(url_for('addItems'))
+        if new_name != "" and isIn == False:
+            db_session.add(MerchandiseItems(name=new_name))
             db_session.commit()
+            flash(u'Success! %r was added' % new_name)
             return redirect(url_for('home'))
-    return render_template('addDates.html', dates=dates, form=form)
 
-@app.route('/home/editItems', methods=['GET', 'POST']) #/<int:id>/
+        else:
+            flash(u'Cannot be blank')
+    return render_template('addItems.html')
+
+
+@app.route('/editItems/', methods=['GET', 'POST']) #/<int:id>/
 def editItems():
     items = MerchandiseItems.query.all()
 
@@ -68,7 +64,27 @@ def editItems():
     return render_template('editItems.html', items=items)
 
 
-@app.route('/home/show_dates', methods=['GET', 'POST'])
+@app.route('/addDates/', methods=['GET', 'POST'])
+def addDates():
+    dates = DatesOfGames.query.all()
+    if request.method == 'POST':
+        date_game = request.form['date_game']
+        city = request.form['city']
+        state = request.form['state']
+
+        if 'cancel' in request.form:
+            return redirect(url_for('home'))
+
+        else:
+            db_session.add(DatesOfGames(game_date=str(date_game), city=city, state=state))
+            db_session.commit()
+            flash('Success!')
+            return redirect(url_for('home'))
+
+    return render_template('addDates.html', dates=dates)
+
+
+@app.route('/show_dates/', methods=['GET', 'POST'])
 def show_dates():
     dates = DatesOfGames.query.all()
     return render_template('show_dates.html', dates=dates)

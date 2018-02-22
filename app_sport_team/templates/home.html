@@ -5,19 +5,27 @@
 {% endblock %}
 
 {% block content %}
-  <style media="screen">
-    table, td {
-      border: 1px solid black
+  <!-- <style media="screen">
+    table, tr {
+      border: 1px dotted black
     }
-  </style>
+  </style> -->
+  {% if items|length() == 0 %}
+      <p>No items in the database yet! <br>
+         Do you want to add some? <br>
+         "Click on the Add an Item"
+      </p>
+  {% endif %}
 
   <div class="tables">
     <table>
-      {% for row in items %}
+      <tbody>
+        {% for row in items %}
         <tr>
           <td>{{ row }}</td>
         </tr>
-      {% endfor %}
+        {% endfor %}
+      </tbody>
     </table>
   </div>
 

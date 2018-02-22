@@ -1,18 +1,12 @@
-import sqlite3
-from datetime import date
+
 from sqlalchemy.engine import Engine
-from sqlalchemy import ForeignKey,\
-                       event,\
-                       create_engine,\
-                       Column,\
-                       Integer,\
-                       String,\
-                       Float,\
-                       Date
-from sqlalchemy.orm import relationship,\
-                           sessionmaker,\
-                           scoped_session
+from sqlalchemy import \
+            ForeignKey, event, create_engine, Column,\
+            Integer, String, Float, Date, Text
+from sqlalchemy.orm import \
+            relationship, sessionmaker, scoped_session
 from sqlalchemy.ext.declarative import declarative_base
+
 from flask import url_for, Markup
 
 from app_sport_team import app
@@ -41,7 +35,7 @@ class MerchandiseItems(Base):
     # Name of table
     __tablename__ = 'merchandise_items'
     id = Column(Integer, primary_key = True)
-    name = Column(String(50), nullable = False)
+    name = Column(String(50), unique=True, nullable = False)
 
     # This table has a relationship with the sales_of_items table.
     sales_of_items = relationship('SalesOfItems', back_populates = 'merchandise_items')
@@ -51,7 +45,7 @@ class MerchandiseItems(Base):
 
     def __repr__(self):
         ''' Display the names list'''
-        return '{}'.format(self.name.capitalize())
+        return '{}'.format(self.name)
 
 
 
@@ -78,7 +72,7 @@ class DatesOfGames(Base):
     __tablename__ = 'games_schedules'
     # Add columns
     id = Column(Integer, primary_key = True)
-    game_date = Column(Date, unique=True) # Format mm/dd/yyyy
+    game_date = Column(String, unique=True)
     city = Column(String(50))
     state = Column(String(50))
 
