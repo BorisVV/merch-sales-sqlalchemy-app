@@ -1,3 +1,5 @@
+
+from datetime import date
 from flask import Flask, session, g, render_template, current_app
 
 app = Flask(__name__)

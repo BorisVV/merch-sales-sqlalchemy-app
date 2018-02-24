@@ -2,7 +2,7 @@
 from sqlalchemy.engine import Engine
 from sqlalchemy import \
             ForeignKey, event, create_engine, Column,\
-            Integer, String, Float, Date, Text
+            Integer, String, Float, Date
 from sqlalchemy.orm import \
             relationship, sessionmaker, scoped_session
 from sqlalchemy.ext.declarative import declarative_base
@@ -72,7 +72,7 @@ class DatesOfGames(Base):
     __tablename__ = 'games_schedules'
     # Add columns
     id = Column(Integer, primary_key = True)
-    game_date = Column(String, unique=True)
+    game_date = Column(String(8), unique=True)
     city = Column(String(50))
     state = Column(String(50))
 
@@ -80,4 +80,5 @@ class DatesOfGames(Base):
 
     def __repr__(self):
         return "{} {} {}".format(self.game_date, self.city, self.state)
+
 init_db()

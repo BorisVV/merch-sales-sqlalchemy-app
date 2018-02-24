@@ -1,8 +1,13 @@
-{% extends "base.html" %}
-{% block title %}{% endblock %}
+{% extends "home.html" %}
+{% block title %}
+<title>Home/addItems</title>
+<h2>Adding items...</h2>
+{% endblock %}
 
-{% block content %}
-  <h1>Add new items to database.</h1>
+
+{% block addItems %}
+  <br>
+  <h3>Add new items to database.</h3>
     <form action="{{ addItems }}" method=post>
       <dl>
         <dt>Enter the item's name:</dt>

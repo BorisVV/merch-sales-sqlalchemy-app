@@ -1,7 +1,7 @@
 
-from datetime import date
 from flask import \
-        render_template, redirect, url_for, g, abort, request, flash
+        render_template, redirect, url_for, g, abort, request, flash, \
+        Response
 
 from app_sport_team import app
 from app_sport_team.tables_setUp import \
@@ -17,7 +17,7 @@ def home():
     items = MerchandiseItems.query.all()
     return render_template('home.html', items=items)
 
-@app.route('/add_items/', methods=['GET', 'POST'])
+@app.route('/home/add_items/', methods=['GET', 'POST'])
 def addItems():
     items = MerchandiseItems.query.all()
     if request.method == 'POST':
@@ -28,7 +28,7 @@ def addItems():
         isIn = False
         for name in items:
             if new_name == name.name:
-                flash(u'That name is already in file. \nTry a different one')
+                flash(u'That name is already in file. <br>Try a different one')
                 isIn = True
                 return redirect(url_for('addItems'))
         if new_name != "" and isIn == False:
@@ -39,7 +39,7 @@ def addItems():
 
         else:
             flash(u'Cannot be blank')
-    return render_template('addItems.html')
+    return render_template('addItems.html', items=items)
 
 
 @app.route('/editItems/', methods=['GET', 'POST']) #/<int:id>/
@@ -67,8 +67,10 @@ def editItems():
 @app.route('/addDates/', methods=['GET', 'POST'])
 def addDates():
     dates = DatesOfGames.query.all()
+
     if request.method == 'POST':
         date_game = request.form['date_game']
+
         city = request.form['city']
         state = request.form['state']
 
@@ -76,9 +78,21 @@ def addDates():
             return redirect(url_for('home'))
 
         else:
+            if date_game == '' or city == '' or state == '':
+                flash('No blank text boxes allowed!')
+                return render_template('addDates.html', date_game=date_game, \
+                                city=city, state=state)
+
+            for _date in dates:
+                if _date.game_date == date_game:
+                    flash(u'Date {} is already in file it can\'t be used twice!'.format(date_game))
+                    return render_template('addDates.html',\
+                        date_game=date_game, city=city, state=state)
+
             db_session.add(DatesOfGames(game_date=str(date_game), city=city, state=state))
             db_session.commit()
-            flash('Success!')
+            flash('Success! <br> Date: {}, City: {}, State: {}, was added to'\
+                    '<br> Games\'s Schedules'.format(date_game, city, state))
             return redirect(url_for('home'))
 
     return render_template('addDates.html', dates=dates)
