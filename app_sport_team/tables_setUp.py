@@ -4,7 +4,7 @@ from sqlalchemy import \
             ForeignKey, event, create_engine, Column,\
             Integer, String, Float, Date
 from sqlalchemy.orm import \
-            relationship, sessionmaker, scoped_session
+            relationship, sessionmaker, scoped_session, backref
 from sqlalchemy.ext.declarative import declarative_base
 
 from flask import url_for, Markup
@@ -37,8 +37,6 @@ class MerchandiseItems(Base):
     id = Column(Integer, primary_key = True)
     name = Column(String(50), unique=True, nullable = False)
 
-    # This table has a relationship with the sales_of_items table.
-    sales_of_items = relationship('SalesOfItems', back_populates = 'merchandise_items')
     # Another option.
     # merchandise_items = relationship('MerchandiseItems', backref=backref('sales_of_items', uselist=True, cascade='delete,all'))
     # cascade='all, delete-orphan', single_parent=True, passive_deletes=True)
@@ -55,13 +53,17 @@ class SalesOfItems(Base):
 
     id = Column(Integer, primary_key = True)
     item_id = Column(Integer, ForeignKey('merchandise_items.id'))
-    date_id = Column(Integer, ForeignKey('games_schedules.id'))
-    quantity_sold = Column(Integer, nullable = False)
+    _date_id = Column(Integer, ForeignKey('games_schedules.id'))
+    quantity_sold = Column(Integer)
     price_per_unit = Column(Float(2))
 
     # tables relations.
-    merchandise_items = relationship('MerchandiseItems', back_populates='sales_of_items') # ondelete='CASCADE'
-    games_schedules = relationship('DatesOfGames', back_populates='sales_of_items')
+    merchandise_items = relationship('MerchandiseItems', backref=backref('sales_of_items', lazy='joined'))# ondelete='CASCADE'
+    games_schedules = relationship('DatesOfGames', backref=backref('sales_of_items', lazy='joined'))
+
+    @property
+    def url():
+        return url_for('addSoldQty', merchandise_items.item_id, games_schedules._date_id)
 
     def __repr__(self):
         return "{} {}".format(self.quantity_sold, self.price_per_unit)
@@ -75,8 +77,6 @@ class DatesOfGames(Base):
     game_date = Column(String(8), unique=True)
     city = Column(String(50))
     state = Column(String(50))
-
-    sales_of_items = relationship('SalesOfItems', back_populates = 'games_schedules')
 
     def __repr__(self):
         return "{} {} {}".format(self.game_date, self.city, self.state)

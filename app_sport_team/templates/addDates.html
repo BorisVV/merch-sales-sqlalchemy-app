@@ -1,15 +1,13 @@
-{% extends "base.html" %}
-{% block title %}
-<title>AddDates</title>
-{% endblock %}
+{% extends "home.html" %}
+{% block title %}<title>Home/AddDates</title>{% endblock %}
 
 {% block head %}
   {{super()}}
   <h1>Add date, city, and state </h1>
 {% endblock %}
 
-{% block content %}
-  <form name="formDates" method="post" onsubmit="required()">
+{% block body %}
+  <form name="formDates" method="post">
     <dl>
       <dt>Enter date:</dt>
         <dd><input type="date" name="date_game" value="{{ date_game }}" size="20"></dd>
@@ -18,8 +16,8 @@
       <dt>Enter State: (e.g. MN)</dt>
         <dd><input type="text" name="state" value="{{ state }}" size="2" max="2"></dd>
         <br>
-        <dd><input type="submit" name="save" value="Save"></dd>
-        <dd><input type="submit" name="cancel" value="Cancel"></dd>
+        <dd><input type="submit" name="save" value="Save">
+            <input type="submit" name="cancel" value="Cancel"></dd>
     </dl>
   </form>
 

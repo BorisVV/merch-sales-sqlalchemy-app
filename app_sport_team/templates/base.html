@@ -22,38 +22,33 @@ src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
           </div>
       {% endif %}
     {% endblock %}
-  </head>
 
-
-  <body>
-    {% block msg %}
-      {% with messages = get_flashed_messages() %}
-        {% if messages %}
-          <ul class=flashes>
-            {% for message in messages %}
-            <li>{{ message|safe }}</li>
-            {% endfor %}
-          </ul>
-        {% endif %}
-      {% endwith %}
-    {% endblock %}
-
-    {% block content %}   {% endblock %}
     <style media="screen">
-    table, tr {
-      border: 1px dotted black
+    table, th, tr, td{
+      border: 1px solid black
     }
     </style>
+  </head>
 
+  <body>
+    {% block body %}
+      {% block msg %}
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <ul class=flashes>
+              {% for message in messages %}
+                <li>{{ message|safe }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        {% endwith %}
+      {% endblock %}
+    {% endblock %}
   </body>
 
-  <footer>
-    <div class="footer">
-      {% block footer %}
-        <ul>
-          <h3><a href="{{ url_for('home') }}">Go to home page</a></h3>
-        </ul>
-      {% endblock %}
-    </div>
-  </footer>
+<footer>
+  {% block footer %}
+  <h2><a href="{{ url_for('home') }}">Go to home page</a></h2>
+  {% endblock %}
+</footer>
 </html>

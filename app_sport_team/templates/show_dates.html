@@ -1,15 +1,25 @@
-{% extends "base.html" %}
-{% block title %}{% endblock %}
+{% extends "home.html" %}
+{% block title %}
+  <title>Home/Show_dates</title>
+  <h3>Showing dates...</h3>
+{% endblock %}
 
-{% block content %}
-  <div class="container">
-    <p>Testing this page</p>
-    <table>
-      {% for element in dates %}
-        <tr>
-          <td>{{ element|e }}</td>
-        </tr>
-      {% endfor %}
-    </table>
-  </div>
+{% block tableItems %}{% endblock %}
+
+{% block body %}
+  <h4>Here is the table of game's dates!</h4>
+  <table>
+      <tr>
+        <th>Date</th>
+        <th>City</th>
+        <th>State</th>
+      </tr>
+    {% for element in _dates %}
+      <tr>
+        <td>{{ element.game_date }}</td>
+        <td>{{ element.city }}</td>
+        <td>{{ element.state }}</td>
+      </tr>
+    {% endfor %}
+  </table>
 {% endblock %}

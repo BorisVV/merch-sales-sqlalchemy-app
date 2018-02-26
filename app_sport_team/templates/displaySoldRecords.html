@@ -1,0 +1,23 @@
+{% extends "home.html" %}
+{% block title %}<title>Home/displayRecords</title>{% endblock %}
+
+{% block body %}
+  <table>
+      <tr>
+        <th>Id</th>
+        <th>ItemId</th>
+        <th>DateId</th>
+        <th>QtySold</th>
+        <th>Price</th>
+      </tr>
+      {% for row in itemsSold %}
+      <tr>
+        <td>{{ row.id }}</td>
+        <td>{{ row.item_id }}</td>
+        <td>{{ row._date_id }}</td>
+        <td>{{ row.quantity_sold }}</td>
+        <td>{{ row.price_per_unit }}</td>
+      </tr>
+      {% endfor %}
+  </table>
+{% endblock %}

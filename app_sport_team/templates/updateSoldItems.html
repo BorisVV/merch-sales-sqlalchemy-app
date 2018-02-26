@@ -1,0 +1,53 @@
+{% extends "home.html" %}
+{% block title %}
+<title>Update_sold_items...</title>
+<h3>First select Date and an Item,<br>
+    then enter the quantity sold and the price per unit.
+</h3>
+{% endblock %}
+
+{% block body %}
+<h4>Select one item from each of the drop down box</h4>
+
+<form method="post">
+  <dd>
+    <sub>Dates:</sub>
+    <br>
+    <select name="selected_date">
+      {% for date in _dates %}
+        <option value="{{ date.id }}" {% if date.id == date_id %} selected {% endif %}> {{ date.game_date }} {{ date.city }} {{ date.state }}</option>
+      {% endfor %}
+    </select>
+
+    <br>
+    <sub>Items:</sub>
+    <br>
+
+    </select>
+    <select name="selected_item" >
+      {% for item in items %}
+        <option value="{{ item.id }}" {% if item.id == item_id %} selected {% endif %}> {{ item.name }} </option>
+      {% endfor %}
+    </select>
+
+    <br><br>
+
+    <p>Enter the quantity sold and the price for the item and the date selected.</p>
+    <dl>
+      <dt><sub>Enter the quantity sold:</sub></dt>
+      <input type="number" name="quantity" value="{{ qty or 0}}" min="0" max="500" required><br>
+      <dt><sub>Enter the price per unit:</sub></dt>
+      <input type="text" name="price" value="{{ price or 0 }}" required min="0" max="150">
+    </dl>
+    {% block msg %}
+    {% for msg in get_flashed_messages() %}
+        <li>{{ msg|safe }}</li>
+    {% endfor %}
+    {% endblock %}
+    <br>
+    <input type="submit" name="save" value="Save">
+
+    <input type="submit" name="cancel" value="Cancel">
+
+  </dd>
+{% endblock %}

@@ -3,44 +3,37 @@
 {% block title %}
   <title>Home</title>
   <h2>This is the home page!</h2>
+  {% block tableItems %}
+    {% if items|length() == 0 %}
+        <p>No items in the database yet! <br>
+           Do you want to add some? <br>
+           "Click on the Add an Item"
+        </p>
+    {% else %}
+        <table>
+          <tbody>
+            {% for row in items %}
+            <tr>
+              <td>{{ row }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+    {% endif %}
+  {% endblock %}
 {% endblock %}
 
-{% block content %}
-  <style media="screen">
-    table, tr {
-      border: 1px dotted black
-    }
-  </style>
-  {% if items|length() == 0 %}
-      <p>No items in the database yet! <br>
-         Do you want to add some? <br>
-         "Click on the Add an Item"
-      </p>
-  {% endif %}
+{% block body %}{% endblock %}
 
-  <div class="tables">
-    <table>
-      <tbody>
-        {% for row in items %}
-        <tr>
-          <td>{{ row }}</td>
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-  </div>
-
-  <div class="">
-    <h2>Select from below</h2>
-    <ul>
-      <li><a href="{{ url_for('addItems') }}"> Add an Item </a></li>
-      <li><a href="{{ url_for('editItems') }}"> Edit/delete Items </a></li>
-      <li><a href="{{ url_for('show_dates') }}">Show games schedules </a></li>
-      <li><a href="{{ url_for('addDates') }}"> Add Dates for Games </a></li>
-    </ul>
-  </div>
-{% block addItems %}{% endblock %}
+{% block footer %}
+  <br>
+  <h2>Select from below</h2>
+  <ul>
+    <li><a href="{{ url_for('addItems') }}"> Add an Item </a></li>
+    <li><a href="{{ url_for('editItems') }}"> Edit/delete Items </a></li>
+    <li><a href="{{ url_for('addDates') }}"> Add Dates for Games </a></li>
+    <li><a href="{{ url_for('show_dates') }}">Show games schedules </a></li>
+    <li><a href="{{ url_for('updateSoldItems') }}"> Select to Add Sells to Items </a></li>
+    <li><a href="{{ url_for('displaySoldRecords') }}"> Display Sold Records</a></li>
+  </ul>
 {% endblock %}
-
-
-{% block footer %}{% endblock %}
