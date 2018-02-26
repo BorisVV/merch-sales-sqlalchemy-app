@@ -19,11 +19,11 @@
   <form  method=post>
     <dl>
       <h4>Select one from the drop down box:</h4>
-      <select class="" name="_item">
+      <select class="" name="_item_id">
         {% for element in items %}
           <!-- <option {% if element.id %} selected {% endif %} -->
           <option
-             value="{{ element.id }}">{{ element.name }}
+            value="{{ element.id }}" {% if element.id == item_id %} selected {% endif %}>{{ element.name }}
           </option>
         {% endfor %}
       </select>
