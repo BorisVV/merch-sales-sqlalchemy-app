@@ -6,14 +6,6 @@ from app_sport_team import app
 from app_sport_team.tables_setUp import \
             db_session, MerchandiseItems, SalesOfItems, DatesOfGames
 
-# Query all the merchandise items.
-def items_query(): # TODO:  find a better way to do it?
-    return MerchandiseItems.query.all()
-
-# Query all the game's dates.
-def dates_query(): # TODO:  find a better way to do it?
-    return DatesOfGames.query.all()
-
 # For example purpose, this is the first pages displayed.
 @app.route('/')
 def base(): # TODO: remove in future.
@@ -22,8 +14,7 @@ def base(): # TODO: remove in future.
 # This page will display the table for the items and options for others pages.
 @app.route('/home/')
 def home():
-    items = items_query()
-    return render_template('home.html', items=items)
+    return render_template('home.html', items=MerchandiseItems.query.all())
 
 # :flash: In the base.html there is a block inside the body block that exexutes
 # the messsages. uses the syntax (var = get_flashed_messages()) and
@@ -32,7 +23,7 @@ def home():
 # User can enter new items, form is displayed.
 @app.route('/add_items/', methods=['GET', 'POST'])
 def addItems():
-    items = items_query()
+    items = MerchandiseItems.query.all()
     if request.method == 'POST':
 
         if 'cancel' in request.form:
@@ -61,22 +52,21 @@ def addItems():
 
     return render_template('addItems.html', items=items)
 
-# TODO: add option to add the id #/<int:id>/ or item being modified on the url.
-
 @app.route('/edit_items/', methods=['GET', 'POST'])
 def editItems():
-    items = items_query()
+    # TODO: add option to add the id #/<int:id>/ or item being modified on the url.
+    items = MerchandiseItems.query.all()
     if request.method == 'POST':
         # Query to get the item's name with the selected id from the form.
         items_row = MerchandiseItems.query.get(request.form['_item_id'])
         # item_id = request.form['_item_id'] # gets the id number only.
 
         if 'delete' in request.form:
-            # name = items_row.name
+            name = items_row.name # Store old name.
             db_session.delete(items_row)
             db_session.commit()
             flash(u'%r was deleted <br> Do you want to delete/update more.\
-                    <br>"Cancel" to quit' % items_row.name)
+                    <br>"Cancel" to quit.' % name)
             return render_template('editItems.html', items=items)
 
         elif 'update' in request.form:
@@ -92,7 +82,7 @@ def editItems():
                 db_session.commit()
                 # Display message.
                 flash(u'%r was updated succesfully! with --> %r' \
-                        % (old_name, new_name))
+                        % (old_name, items_row.name))
                 flash(u'delete/update another? "Cancel" to quit')
                 # Render the template again with the updated item selected.
                 return render_template('editItems.html', items=items, item_id=items_row.id)
@@ -109,11 +99,8 @@ def editItems():
 
 @app.route('/add_dates/', methods=['GET', 'POST'])
 def addDates():
-    # Enter new dates for games.
-    _dates = dates_query()
-
-    form = dict(game_date=_dates.game_date, )
-
+    _dates = DatesOfGames.query.all()
+    # Collect the date, city and state for the game.
     if request.method == 'POST':
         date_game = request.form['date_game']
         city = request.form['city']
@@ -123,51 +110,68 @@ def addDates():
             return redirect(url_for('home'))
 
         else:
-            for _date in _dates:
-                if _date.game_date == date_game:
-                    flash(u'Date {} is already in file it can\'t be used twice!'.format(date_game))
-                    return render_template('addDates.html',\
-                        date_game=date_game, city=city, state=state)
+            # Need to validate the input and make sure that date in not
+            # already in db.
+            if date_game != "":
+                for _date in _dates:
+                    if _date.game_date == date_game:
+                        flash(u'Date {} is already in file it can\'t be used twice!'.format(date_game))
+                        return render_template('addDates.html',\
+                            date_game=date_game, city=city, state=state)
 
-            if date_game == '' or city == '' or state == '':
+            # This is to make sure that boxes are not empty.
+            elif date_game == '' or city == '' or state == '':
                 flash('No blank text boxes allowed!')
                 return render_template('addDates.html', date_game=date_game, \
-                                city=city, state=state)
+                city=city, state=state)
 
             db_session.add(DatesOfGames(game_date=str(date_game), city=city, state=state))
             db_session.commit()
-            flash('Success! <br> Date: {}, City: {}, State: {}, was added to\
-                    <br> Games\'s Schedules <br> Would you like to add more?\
-                    \'Cancel\' to exit'.format(date_game, city, state))
+            flash('Success! <br> \
+            Date: {}, City: {}, State: {} <br> \
+            was added to Games\' Schedules <br>  \
+            Would you like to add more? \'Cancel\' to exit.' \
+            .format(date_game, city, state)
+            )
             return redirect(url_for('addDates'))
 
     return render_template('addDates.html', _dates=_dates)
 
 @app.route('/show_dates/')
 def show_dates():
-    _dates = dates_query()
-    return render_template('show_dates.html', _dates=_dates)
+    return render_template('show_dates.html', _dates=DatesOfGames.query.all())
 
 @app.route('/edit_sold_items/', methods=['GET', 'POST'])
 def updateSoldItems():
-    items = items_query()
-    _dates = dates_query()
+    items = MerchandiseItems.query.all()
+    _dates = DatesOfGames.query.all()
 
     if request.method == 'POST':
 
         if 'cancel' in request.form:
             return redirect(url_for('home'))
 
+        # In the html there is a select and options. The values/id are
+        # collected from the select for both item and date.
         item_id = int(request.form['selected_item'])
         date_id = int(request.form['selected_date'])
+
+        # This two lines below are for example only.
         # name = MerchandiseItems.query.get(request.form['selected_item'])
         # _date = DatesOfGames.query.get(request.form['selected_date'])
+
+        # The input has the values for qty and price.
         qty = request.form['quantity']
         price = request.form['price']
+
+        # The price is a string and needs to be converted to float and if
+        # the input is not a number it will raise an Exception.
         try:
             price = float(price)
-            if price < 0 or price > 150:
-                flash(u'Make sure the price is between 0(zero) and 150.\
+
+            # for small example we need to keep data small.
+            if price < 1 or price > 150:
+                flash(u'Make sure the price is between 1.00 and 150.00.\
                     <br>You entered %r' % price)
                 return render_template('updateSoldItems.html',\
                         items=items, _dates=_dates, item_id=item_id, \
@@ -180,15 +184,30 @@ def updateSoldItems():
                 return render_template('updateSoldItems.html', items=items, _dates=_dates)
 
         except:
+            # The input was a string not a numeric value.
             flash(u'Check price and make sure is a number. <br>\
                     You entered %r' % price)
             return render_template('updateSoldItems.html',\
                     items=items, _dates=_dates, item_id=item_id, \
-                    date_id=date_id, qty=qty, price='')
+                    date_id=date_id, qty=qty, price=price)
 
     return render_template('updateSoldItems.html', items=items, _dates=_dates)
 
 @app.route('/display_redords/')
 def displaySoldRecords():
-    itemsSold = SalesOfItems.query.all()
-    return render_template('displaySoldRecords.html', itemsSold=itemsSold)
+    return render_template('displaySoldRecords.html', itemsSold=SalesOfItems.query.all())
+
+@app.route('/edit_sold_records/<int:id>/', methods=['GET', 'POST'])
+def editSoldRecords(id):
+    # id is from the displaySoldRecords.html
+    modifySold = SalesOfItems.query.get(id)
+
+    if modifySold is None:
+        flash('Issues with id...')
+        return redirect(url_for('displaySoldRecords'))
+    if request.method == 'POST':
+        if 'cancel' in request.form:
+            flash(u'Transaction canceled!')
+            return redirect(url_for('displaySoldRecords'))
+
+    return render_template('editSoldRecords.html', modifySold=modifySold)

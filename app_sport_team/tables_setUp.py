@@ -62,8 +62,8 @@ class SalesOfItems(Base):
     games_schedules = relationship('DatesOfGames', backref=backref('sales_of_items', lazy='joined'))
 
     @property
-    def url():
-        return url_for('addSoldQty', merchandise_items.item_id, games_schedules._date_id)
+    def url(self):
+        return url_for('editSoldRecords', id=self.id)
 
     def __repr__(self):
         return "{} {}".format(self.quantity_sold, self.price_per_unit)
