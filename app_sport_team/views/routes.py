@@ -14,7 +14,9 @@ def base(): # TODO: remove in future.
 # This page will display the table for the items and options for others pages.
 @app.route('/home/')
 def home():
-    return render_template('home.html', items=MerchandiseItems.query.all())
+    items = MerchandiseItems.query.all()
+    games = DatesOfGames.query.all()
+    return render_template('home.html', items=items, games=games)
 
 # :flash: In the base.html there is a block inside the body block that exexutes
 # the messsages. uses the syntax (var = get_flashed_messages()) and
@@ -142,7 +144,7 @@ def show_dates():
     return render_template('show_dates.html', _dates=DatesOfGames.query.all())
 
 @app.route('/edit_sold_items/', methods=['GET', 'POST'])
-def updateSoldItems():
+def addSoldRecord():
     items = MerchandiseItems.query.all()
     _dates = DatesOfGames.query.all()
 
@@ -173,7 +175,7 @@ def updateSoldItems():
             if price < 1 or price > 150:
                 flash(u'Make sure the price is between 1.00 and 150.00.\
                     <br>You entered %r' % price)
-                return render_template('updateSoldItems.html',\
+                return render_template('addSoldRecord.html',\
                         items=items, _dates=_dates, item_id=item_id, \
                         date_id=date_id, qty=qty, price='')
             else:
@@ -181,17 +183,17 @@ def updateSoldItems():
                 db_session.commit()
                 flash(u'Record updated succesfully! <br>'\
                         'Do you want to updated more? \'Cancel\' to quit!')
-                return render_template('updateSoldItems.html', items=items, _dates=_dates)
+                return render_template('addSoldRecord.html', items=items, _dates=_dates)
 
         except:
             # The input was a string not a numeric value.
             flash(u'Check price and make sure is a number. <br>\
                     You entered %r' % price)
-            return render_template('updateSoldItems.html',\
+            return render_template('addSoldRecord.html',\
                     items=items, _dates=_dates, item_id=item_id, \
                     date_id=date_id, qty=qty, price=price)
 
-    return render_template('updateSoldItems.html', items=items, _dates=_dates)
+    return render_template('addSoldRecord.html', items=items, _dates=_dates)
 
 @app.route('/display_redords/')
 def displaySoldRecords():
@@ -205,9 +207,37 @@ def editSoldRecords(id):
     if modifySold is None:
         flash('Issues with id...')
         return redirect(url_for('displaySoldRecords'))
+
+    form = dict(qty=modifySold.quantity_sold, \
+                price=modifySold.price_per_unit, \
+                name=modifySold.merchandise_items.name, \
+                _date=modifySold.games_schedules.game_date
+                )
     if request.method == 'POST':
+
         if 'cancel' in request.form:
             flash(u'Transaction canceled!')
             return redirect(url_for('displaySoldRecords'))
 
-    return render_template('editSoldRecords.html', modifySold=modifySold)
+        elif 'done' in request.form:
+            flash(u'No changes were made!')
+            return redirect(url_for('displaySoldRecords'))
+
+        else:
+            form['qty'] = request.form['quantity']
+            form['price'] = request.form['price']
+
+            # The table takes a float for price, try/except is very handy here.
+            try:
+                new_price = float(form['price'])
+                modifySold.quantity_sold = form['qty']
+                modifySold.price_per_unit = new_price
+                db_session.commit()
+                flash(u'Success, data updated!!')
+            except Exception as e:
+                db_session.rollback()
+                flash(u'Error, ' + str(e))
+
+
+    return render_template('editSoldRecords.html', form=form, \
+                            modifySold=modifySold)

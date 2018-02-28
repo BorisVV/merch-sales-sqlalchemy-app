@@ -1,39 +1,34 @@
 {% extends "base.html" %}
+{% block title %}Home{% endblock %}
 
-{% block title %}
-  <title>Home</title>
-  <h2>This is the home page!</h2>
-  {% block tableItems %}
+{% block body %}
+    <h2>This is the home page!</h2>
     {% if items|length() == 0 %}
-        <p>No items in the database yet! <br>
-           Do you want to add some? <br>
-           "Click on the Add an Item"
-        </p>
+    <p>No items in the database yet! <br>
+      Do you want to add some? <br>
+      "Click on the Add an Item"
+    </p>
     {% else %}
-        <table>
-          <tbody>
-            {% for row in items %}
-            <tr>
-              <td>{{ row }}</td>
-            </tr>
-            {% endfor %}
-          </tbody>
-        </table>
+      <p>This table shows the item's names</p>
+      <table>
+        <tr>
+          <th>Name</th>
+        </tr>
+        {% for row in items %}
+          <tr>
+            <td>{{ row }}</td>
+          </tr>
+        {% endfor %}
+      </table>
     {% endif %}
-  {% endblock %}
 {% endblock %}
 
-{% block body %}{% endblock %}
-
 {% block footer %}
-  <br>
-  <h2>Select from below</h2>
-  <ul>
-    <li><a href="{{ url_for('addItems') }}"> Add an Item </a></li>
-    <li><a href="{{ url_for('editItems') }}"> Edit/delete Items </a></li>
-    <li><a href="{{ url_for('addDates') }}"> Add Dates for Games </a></li>
-    <li><a href="{{ url_for('show_dates') }}">Show games schedules </a></li>
-    <li><a href="{{ url_for('updateSoldItems') }}"> Select to Add Sells to Items </a></li>
-    <li><a href="{{ url_for('displaySoldRecords') }}"> Display Sold Records</a></li>
-  </ul>
+  <h4>Links to other pages/options.</h4>
+  <a href="{{ url_for('addItems') }}"> Add an Item </a><br>
+  <a href="{{ url_for('editItems') }}"> Edit/Delete Items </a><br>
+  <a href="{{ url_for('addDates') }}"> Add Dates for Games </a><br>
+  <a href="{{ url_for('show_dates') }}">Show Games Schedules </a><br>
+  <a href="{{ url_for('addSoldRecord') }}"> Select to Add New Sold Record </a><br>
+  <a href="{{ url_for('displaySoldRecords') }}"> Display Sold Records</a><br>
 {% endblock %}

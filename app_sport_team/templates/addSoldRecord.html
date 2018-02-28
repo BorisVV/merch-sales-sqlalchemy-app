@@ -1,13 +1,13 @@
 {% extends "home.html" %}
-{% block title %}
-<title>Update_sold_items...</title>
-<h3>First select Date and an Item,<br>
-    then enter the quantity sold and the price per unit.
-</h3>
-<h4>Select one item from each of the drop down box</h4>
-{% endblock %}
+{% block title %}AddSoldRecord{% endblock %}
 
 {% block body %}
+  <dd>
+    <h3>First select Date and an Item,<br>
+      then enter the quantity sold and the price per unit.
+    </h3>
+    <h4>Select one item from each of the drop down box</h4>
+  </dd>
   <form method="post">
     <dd>
       {% block select %}

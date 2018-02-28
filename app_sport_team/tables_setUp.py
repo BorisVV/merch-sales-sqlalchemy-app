@@ -61,6 +61,9 @@ class SalesOfItems(Base):
     merchandise_items = relationship('MerchandiseItems', backref=backref('sales_of_items', lazy='joined'))# ondelete='CASCADE'
     games_schedules = relationship('DatesOfGames', backref=backref('sales_of_items', lazy='joined'))
 
+    def totalCost(self):
+        return round((self.quantity_sold * self.price_per_unit), 2)
+
     @property
     def url(self):
         return url_for('editSoldRecords', id=self.id)

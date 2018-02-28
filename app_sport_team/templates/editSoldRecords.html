@@ -1,0 +1,32 @@
+{% extends "home.html" %}
+{% block title %}EditSoldRecords{% endblock %}
+
+{% block body %}
+  <h3>This page is to edit dates/items sold values.</h3>
+  <form action="{{ modifySold.url }}" method="post">
+    <dd>
+      <p>Edit the quantity and price for... </p>
+      <br>
+      Item name: {{ form['name'] }}
+      <br>
+      Game Date: {{ form['_date'] }}
+      <br>
+      Quantity: {{ form['qty'] }}
+      <br>
+      Price: {{ form['price'] }}
+      <br>
+      <p>Enter new quantity sold and the new price for the item and date selected.</p>
+      <dl>
+        <dt><sub>Enter new quantity sold/old is in box:</sub></dt>
+        <input type="number" name="quantity" value="{{ form['qty'] }}" min="0" max="500" required placeholder="0"><br>
+        <dt><sub>Enter new price/old is in box:</sub></dt>
+        <input type="text" name="price" value="{{ form['price'] }}" min="0" required placeholder="0.00">
+      </dl>
+      <br>
+      <input type="submit" name="save" value="Save">
+      <input type="submit" name="cancel" value="Cancel">
+      <input type="submit" name="done" value="Done" >
+
+    </dd>
+  </form>
+{% endblock %}
