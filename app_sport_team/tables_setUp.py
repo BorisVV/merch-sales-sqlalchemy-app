@@ -1,4 +1,5 @@
-import sqlalchemy
+
+from datetime import datetime
 from sqlalchemy.engine import Engine
 from sqlalchemy import \
             ForeignKey, event, create_engine, Column,\
@@ -80,6 +81,10 @@ class DatesOfGames(Base):
     game_date = Column(DateTime, unique=True)
     city = Column(String(50))
     state = Column(String(50))
+
+    @property
+    def url(self):
+        return url_for('edit_schedules', id=self.id)
 
     def __repr__(self):
         return "{} {} {}".format(self.game_date, self.city, self.state)

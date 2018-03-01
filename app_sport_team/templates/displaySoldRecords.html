@@ -18,7 +18,7 @@
       <tr>
         <td>{{ row.id }}</td>
         <td>{{ row.merchandise_items.name}}</td>
-        <td>{{ row.games_schedules.game_date }}</td>
+        <td>{{ row.games_schedules.game_date|dateformat }}</td>
         <td>{{ row.games_schedules.city }}</td>
         <td>{{ row.games_schedules.state }}</td>
         <td>{{ row.quantity_sold }}</td>

@@ -145,6 +145,22 @@ def addDates():
 def show_dates():
     return render_template('show_dates.html', _dates=DatesOfGames.query.all())
 
+@app.route('/edit_schedules/<int:id>/', methods=['GET', 'POST'])
+def edit_schedules(id):
+    sched = DatesOfGames.query.get(id)
+
+    form = dict(game_dt=sched.game_date, city=sched.city, state=sched.state)
+    if request.method == 'POST':
+        if 'cancel' in request.form:
+            return redirect(url_for('show_dates'))
+        if 'delete' in request.form:
+            db_session.delete(sched)
+            db_session.commit()
+            return redirect(url_for('show_dates'))
+
+
+    return render_template('edit_schedules.html', form=form, sched=sched)
+
 @app.route('/edit_sold_items/', methods=['GET', 'POST'])
 def addSoldRecord():
     items = MerchandiseItems.query.all()
