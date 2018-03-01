@@ -1,0 +1,39 @@
+{% extends "home.html" %}
+{% block title %}EditItems{% endblock %}
+
+{% block body %}
+  <script type=text/javascript>
+    $(function() {
+      $('input[name="delete"]').click(function() {
+        if (!confirm("Do you really want to delete this Item?\n\n" +
+                     "THIS CANNOT BE UNDONE!"))
+          return false;
+      });
+    });
+  </script>
+
+  <h2>Edit or delete items...</h2>
+
+  <form  method=post>
+    <dl>
+      <h4>Select one from the drop down box:</h4>
+      <select class="" name="_item_id">
+        {% for element in items %}
+          <!-- <option {% if element.id %} selected {% endif %} -->
+          <option
+            value="{{ element.id }}" {% if element.id == item_id %} selected {% endif %}>{{ element.name }}
+          </option>
+        {% endfor %}
+      </select>
+
+      <dt><sub>Update selected item with new name here.</sub></dt>
+      <input type="text" name="new_name" value="{{ new_name }}"><br>
+
+      <br>
+      <input type="submit" name="delete" value="Delete">
+      <input type="submit" name="update" value="Update name">
+      <input type="submit" value="Cancel">
+    </dl>
+  </form>
+
+{% endblock %}

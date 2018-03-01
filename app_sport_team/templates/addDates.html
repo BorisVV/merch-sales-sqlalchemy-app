@@ -1,0 +1,24 @@
+{% extends "home.html" %}
+{% block title %}AddDates{% endblock %}
+
+{% block head %}
+  {{super()}}
+  <h1>Add date, city, and state </h1>
+{% endblock %}
+
+{% block body %}
+  <form name="formDates" method="post">
+    <dl>
+      <dt>Enter date:</dt>
+        <dd><input type="date" name="date_game" value="{{ date_game }}" size="20"></dd>
+      <dt>Enter City:</dt>
+        <dd><input type="text" name="city" value="{{ city }}" size="20"></dd>
+      <dt>Enter State: (e.g. MN)</dt>
+        <dd><input type="text" name="state" value="{{ state }}" size="2" max="2"></dd>
+        <br>
+        <dd><input type="submit" name="save" value="Save">
+            <input type="submit" name="cancel" value="Cancel"></dd>
+    </dl>
+  </form>
+
+{% endblock %}

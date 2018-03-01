@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    {% block head %}
+      <link rel="stylesheet" \
+            href="{{ url_for('static', filename='style.css') }}">
+      <meta charset="utf-8">
+      <meta name="viewport" \
+            content="width=device-width, initial-scale=1, shrink-to-fit=no">
+      <script type=text/javascript \
+      src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js">
+      </script>
+      <title>{% block title %}Welcome{% endblock %}</title>
+      <a href="{{ url_for('base') }}"></a>
+    {% endblock %}
+  </head>
+  <body>
+    {% block body %}
+      <h1>Welcome</h1>
+      <p>
+        This is the database to store sold items and prices
+        for games played in a selected date.<br>
+      </p>
+      <p>
+        Below is the link to the home page.
+      </p>
+    {% endblock %}
+
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        <ul class=flashes>
+          {% for message in messages %}
+            <li>{{ message|safe }}</li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    {% endwith %}
+  </body>
+
+<footer>
+  <div class="footer">
+    {% block footer %}
+      <h2><a href="{{ url_for('home') }}">Go to home page</a></h2>
+    {% endblock %}
+  </div>
+</footer>
+</html>

@@ -1,0 +1,15 @@
+{% extends "home.html" %}
+{% block title %}addItems{% endblock %}
+
+{% block body %}
+  <h3>Add new items to database.</h3>
+    <form method=post>
+      <dl>
+        <dt>Enter the item's name:</dt>
+        <input type="text" name="name" value="{{ new_name }}" size="30">
+        <p>
+        <input type="submit" value="Save">
+        <input type="submit" name="cancel" value="Cancel">
+      </dl>
+    </form>
+{% endblock %}
