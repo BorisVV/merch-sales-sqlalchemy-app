@@ -24,16 +24,15 @@ def remove_db_session(exception):
 from app_sport_team.views import routes
 # etc.
 
+
 # TODO: get register_blueprint/create files.
 # app.register_blueprint(routes.mod)
 #etc
 
-def format_date(dt):
-    return dt.strfdate('%m-%d-%Y')
-
 from app_sport_team.tables_setUp import db_session, MerchandiseItems, SalesOfItems, DatesOfGames
 
-app.jinja_env.filters['dateformat'] = format_date
+from app_sport_team import utils
+app.jinja_env.filters['dateformat'] = utils.format_date_jinja
 # TODO: check the code below and fix it
 # from app_sport_team import utils #TODO create utils.py
 # app.jinja_env.filters['displayopenid'] = utils.display_openid
