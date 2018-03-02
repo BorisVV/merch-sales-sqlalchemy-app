@@ -1,16 +1,16 @@
 .content {
-  margin: 5%;
+  margin: 4.0em 12.0em;
 }
 
 .footer {
-  padding: .5em;
   border: 1px solid black;
-  margin: 5%; width: 18%;
+  padding: .5em;
+  margin: 0% 12.0em; width: 18%;
   text-align: center;
 }
 
 .notes_footer{
-  margin-left: 5%;
+  margin: 0% 12.0em;
 }
 
 table, th, td {

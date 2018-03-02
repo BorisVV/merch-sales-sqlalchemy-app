@@ -2,21 +2,21 @@
 {% block title %}DisplayRecords{% endblock %}
 
 {% block content %}
-  <h2>This is the home page!</h2>
-  {% if items|length() == 0 %}
-  <p>No items/records of sold items in database yet! <br>
+  {% if itemsSold|length() == 0 %}
+  <p><h2>No items/records of sold items in database yet!</h2><br>
     Do you want to add some? <br>
     <a href="{{ url_for('addSoldRecord' )}}">Click here</a>
   </p>
   {% else %}
+    <h2>This is the table that stores the data for each of the games.</h2>
     <table>
-        <caption><h3>Table of sold items!</h3> </caption>
+        <caption>Table of sold items!</caption>
         <tr>
           <th>Index</th>
-          <th>ItemName</th>
           <th>Date</th>
           <th>City</th>
           <th>State</th>
+          <th>Name</th>
           <th>QtySold</th>
           <th>Price/Unit</th>
           <th>Total</th>
@@ -24,17 +24,18 @@
         {% for row in itemsSold %}
         <tr>
           <td>{{ loop.index }}</td>
-          <td>{{ row.merchandise_items.name}}</td>
           <td>{{ row.games_schedules.game_date|dateformat }}</td>
           <td>{{ row.games_schedules.city }}</td>
           <td>{{ row.games_schedules.state }}</td>
+          <td>{{ row.merchandise_items.name}}</td>
           <td>{{ row.quantity_sold }}</td>
           <td>{{ '$ '|safe }} {{ row.price_per_unit }}</td>
           <td>{{ '$ '|safe }} {{ row.totalCost() }}</td>
-          <td><a href="{{ row.url }}">edit/update</a></td>
+          <td><a href="{{ row.url }}">edit/delete</a></td>
         </tr>
         {% endfor %}
     </table>
-    <p>Add/Update records?   <a href="{{ url_for('addSoldRecord') }}">Click here</a> </p>
+    <p>Add a new record for a date?   <a href="{{ url_for('addSoldRecord') }}">Click here</a> </p>
   {% endif %}
 {% endblock %}
+{% block footer %}Working...{% endblock %}

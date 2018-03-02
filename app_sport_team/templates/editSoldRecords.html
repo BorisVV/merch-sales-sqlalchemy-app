@@ -1,8 +1,12 @@
 {% extends "layout.html" %}
-{% block title %}EditSoldRecords{% endblock %}
+{% block title %}EditSoldRecord{% endblock %}
 
 {% block content %}
-  <h3>This page is to edit dates/items sold values.</h3>
+  <h3>This page is to edit or delete the row for date {{ form['_date'] }} selected.</h3>
+  <p>You can only edit the quantity and price.</p>
+  <!-- NOTE: Fix this line -->
+  <p>If you want to delete date go <a href="{{ url_for() }}"></a>here</p>
+  <!-- NOTE:  -->
   <form action="{{ modifySold.url }}" method="post">
     <dd>
       <p>Edit the quantity and price for... </p>
@@ -10,10 +14,6 @@
       Item name: {{ form['name'] }}
       <br>
       Game Date: {{ form['_date'] }}
-      <br>
-      Quantity: {{ form['qty'] }}
-      <br>
-      Price: {{ form['price'] }}
       <br>
       <p>Enter new quantity sold and the new price for the item and date selected.</p>
       <dl>
@@ -25,7 +25,17 @@
       <br>
       <input type="submit" name="update" value="Update">
       <input type="submit" name="delete" value="Delete" >
-      <input type="submit" name="cancel" value="Cancel">
+      <input type="submit" name="cancel" value="Cancel"><br>
+
+      <br>
+      <p>Warning: If you click delete, it will only delete <br>
+         the row in this table.</p>
+      <p>To delete the date, it has to be done '''Working on it'''<br></p>
+        <!-- NOTE: Fix this so it takes the user to delete dates by the id
+          at this link click here</a>  -->
+      <p>To delete the item, it has to be done '''Working on it'''<br>
+
+         <!-- NOTE: Fix this so the user can delete item by the id -->
 
     </dd>
   </form>

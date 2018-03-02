@@ -23,7 +23,8 @@ def addItems():
     if request.method == 'POST':
 
         if 'cancel' in request.form:
-            return redirect(url_for('index'))
+            flash('The option to add items was canceled!')
+            return redirect(url_for('displaySoldRecords'))
 
         else:
             # Save button was clicked.
@@ -102,7 +103,8 @@ def addDates():
         state = request.form['state']
 
         if 'cancel' in request.form:
-            return redirect(url_for('index'))
+            flash('The add dates option was canceled!')
+            return redirect(url_for('displaySoldRecords'))
 
         else:
             # This is to make sure that boxes are not empty.
@@ -189,50 +191,51 @@ def addSoldRecord():
     items = MerchandiseItems.query.all()
     _dates = DatesOfGames.query.all()
 
+    # TODO:  Create a form dict for render_template.
+
     if request.method == 'POST':
 
         if 'cancel' in request.form:
-            return redirect(url_for('index'))
+            return redirect(url_for('displaySoldRecords'))
 
-        # In the html there is a select and options. The values/id are
-        # collected from the select for both item and date.
-        item_id = int(request.form['selected_item'])
-        date_id = int(request.form['selected_date'])
+        else:
+            # In the html there is a select and options. The values/id are
+            # collected from the select for both item and date.
+            item_id = int(request.form['selected_item'])
+            date_id = int(request.form['selected_date'])
 
-        # This two lines below are for example only.
-        # name = MerchandiseItems.query.get(request.form['selected_item'])
-        # _date = DatesOfGames.query.get(request.form['selected_date'])
+            # This two lines below are for example only.
+            # name = MerchandiseItems.query.get(request.form['selected_item'])
+            # _date = DatesOfGames.query.get(request.form['selected_date'])
 
-        # The input has the values for qty and price.
-        qty = request.form['quantity']
-        price = request.form['price']
+            # The input has the values for qty and price.
+            qty = request.form['quantity']
+            price = request.form['price']
 
-        # The price is a string and needs to be converted to float and if
-        # the input is not a number it will raise an Exception.
-        try:
-            price = float(price)
+            # The price is a string and needs to be converted to float and if
+            # the input is not a number it will raise an Exception.
+            try:
+                price = float(price)
 
-            # for small example we need to keep data small.
-            if price < 1 or price > 150:
-                flash('Make sure the price is between 1.00 and 150.00.\
-                    <br>You entered %r' % price)
+                # for small example we need to keep data small.
+                if price < 1 or price > 150:
+                    flash('Make sure the price is between 1.00 and 150.00.\
+                        <br>You entered %r' % price)
+                    return render_template('addSoldRecord.html',\
+                            items=items, _dates=_dates, item_id=item_id, \
+                            date_id=date_id, qty=qty, price='')
+                else:
+                    db_session.add(SalesOfItems(item_id=item_id, _date_id=date_id, quantity_sold=qty, price_per_unit=price))
+                    db_session.commit()
+                    flash('Record added and saved succesfully!')
+                    return redirect(url_for('displaySoldRecords'))
+            except:
+                # The input was a string not a numeric value.
+                flash('Check price and make sure is a number. <br>\
+                        You entered %r' % price)
                 return render_template('addSoldRecord.html',\
                         items=items, _dates=_dates, item_id=item_id, \
-                        date_id=date_id, qty=qty, price='')
-            else:
-                db_session.add(SalesOfItems(item_id=item_id, _date_id=date_id, quantity_sold=qty, price_per_unit=price))
-                db_session.commit()
-                flash('Record updated succesfully! <br>'\
-                        'Do you want to updated more? \'Cancel\' to quit!')
-                return render_template('addSoldRecord.html', items=items, _dates=_dates)
-
-        except:
-            # The input was a string not a numeric value.
-            flash('Check price and make sure is a number. <br>\
-                    You entered %r' % price)
-            return render_template('addSoldRecord.html',\
-                    items=items, _dates=_dates, item_id=item_id, \
-                    date_id=date_id, qty=qty, price=price)
+                        date_id=date_id, qty=qty, price=price)
 
     return render_template('addSoldRecord.html', items=items, _dates=_dates)
 
