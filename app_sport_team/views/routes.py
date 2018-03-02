@@ -1,5 +1,5 @@
 
-from datetime import date
+from datetime import datetime
 from flask import \
         render_template, redirect, url_for, abort, request, flash
 
@@ -148,17 +148,48 @@ def show_dates():
 @app.route('/edit_schedules/<int:id>/', methods=['GET', 'POST'])
 def edit_schedules(id):
     sched = DatesOfGames.query.get(id)
+    # Date is in the form Y-m-d @ m:s:.etc which is bad for
+    # reding, the strftime solves that problem.
+    dt = datetime.strftime(sched.game_date, '%Y-%m-%d')
+    # This is to display the deleted information.
+    dt_str = tuple((dt, str(sched.city), str(sched.state)))
 
-    form = dict(game_dt=sched.game_date, city=sched.city, state=sched.state)
+    form = dict(_date="", city="", state="")
     if request.method == 'POST':
         if 'cancel' in request.form:
             return redirect(url_for('show_dates'))
+
+        # Format date to convert it to sqlalchey DateTime
+        form['_date'] = utils.format_date(request.form['date'])
+        form['city'] = request.form['city']
+        form['state'] = request.form['state']
+        # If the boxes are left blank.
+        if form['_date'] == "":
+            form['_date'] = sched.game_date
+        if form['city'] == "":
+            form['city'] = sched.city
+        if form['state'] == "":
+            form['state'] = sched.state
+
+        # Assuming that nothing goes wrong.
         if 'delete' in request.form:
             db_session.delete(sched)
             db_session.commit()
+            flash('Deleted ' + str(dt_str))
             return redirect(url_for('show_dates'))
 
-
+        else:
+            try:
+                # Update the data.
+                sched.game_date = form['_date']
+                sched.city = form['city']
+                sched.state = form['state']
+                db_session.commit()
+                flash('Updated succesfully!')
+                return redirect(url_for('show_dates'))
+            except:
+                flash('Something went wrong')
+                return redirect(url_for('edit_schedules'))
     return render_template('edit_schedules.html', form=form, sched=sched)
 
 @app.route('/edit_sold_items/', methods=['GET', 'POST'])
