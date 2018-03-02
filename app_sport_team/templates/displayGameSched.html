@@ -3,17 +3,19 @@
 
 {% block tableItems %}{% endblock %}
 
-{% block body %}
+{% block content %}
   <h3>Showing dates...</h3>
   <h4>Here is the table of game's dates!</h4>
-  <table class="show_dates">
+  <table>
       <tr>
+        <th>Index</th>
         <th>Date</th>
         <th>City</th>
         <th>State</th>
       </tr>
     {% for element in _dates %}
       <tr>
+        <td>{{ loop.index }}</td>
         <td>{{ element.game_date|dateformat }}</td>
         <td>{{ element.city }}</td>
         <td>{{ element.state }}</td>

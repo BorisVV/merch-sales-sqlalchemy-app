@@ -2,27 +2,25 @@
 
 {% block title %}Edit Schedules{% endblock %}
 
-{% block body %}
-  <dd>
-    <h4>This page is editing or deleting game's schedules.</h4>
-    <p>You have the choice to delete or update the schedule.</p>
-    <form method="post">
-      <dd>
-        Date: {{ sched.game_date|dateformat }}<br>
-        <input type="date" name="date" value="{{ form['_date'] }}">
-        <br><br>
-        City: {{ sched.city }}<br>
-        <input type="text" name="city" value="{{ form['city'] }}" placeholder="{{ sched.city }}">
-        <br><br>
-        State: {{ sched.state }}<br>
-        <input type="text" name="state" value="{{ form['state'] }}" placeholder="{{ sched.state }}">
-        <br>
+{% block content %}
+  <h4>This page is editing or deleting game's schedules.</h4>
+  <p>You have the choice to delete or update the schedule.</p>
+  <form method="post">
+    <dd>
+      Date: {{ sched.game_date|dateformat }}<br>
+      <input type="date" name="date" value="{{ form['_date'] }}">
+      <br><br>
+      City: {{ sched.city }}<br>
+      <input type="text" name="city" value="{{ form['city'] }}" placeholder="{{ sched.city }}">
+      <br><br>
+      State: {{ sched.state }}<br>
+      <input type="text" name="state" value="{{ form['state'] }}" placeholder="{{ sched.state }}">
+      <br>
 
-        <br>
-        <input type="submit" name="delete" value="Delete">
-        <input type="submit" name="uddate" value="Update">
-        <input type="submit" name="cancel" value="Cancel">
-      </dd>
+      <br>
+      <input type="submit" name="delete" value="Delete">
+      <input type="submit" name="uddate" value="Update">
+      <input type="submit" name="cancel" value="Cancel">
     </dd>
   </form>
 {% endblock %}

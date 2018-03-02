@@ -141,9 +141,9 @@ def addDates():
 
     return render_template('addDates.html')
 
-@app.route('/show_dates/')
-def show_dates():
-    return render_template('show_dates.html', _dates=DatesOfGames.query.all())
+@app.route('/display_games_sched/')
+def displayGameSched():
+    return render_template('displayGameSched.html', _dates=DatesOfGames.query.all())
 
 @app.route('/edit_schedules/<int:id>/', methods=['GET', 'POST'])
 def edit_schedules(id):
@@ -157,7 +157,7 @@ def edit_schedules(id):
     form = dict(_date="", city="", state="")
     if request.method == 'POST':
         if 'cancel' in request.form:
-            return redirect(url_for('show_dates'))
+            return redirect(url_for('displayGameSched'))
 
         # Format date to convert it to sqlalchey DateTime
         form['_date'] = utils.format_date(request.form['date'])
@@ -176,7 +176,7 @@ def edit_schedules(id):
             db_session.delete(sched)
             db_session.commit()
             flash('Deleted ' + str(dt_str))
-            return redirect(url_for('show_dates'))
+            return redirect(url_for('displayGameSched'))
 
         else:
             try:
@@ -186,13 +186,13 @@ def edit_schedules(id):
                 sched.state = form['state']
                 db_session.commit()
                 flash('Updated succesfully!')
-                return redirect(url_for('show_dates'))
+                return redirect(url_for('displayGameSched'))
             except:
                 flash('Something went wrong')
                 return redirect(url_for('edit_schedules'))
     return render_template('edit_schedules.html', form=form, sched=sched)
 
-@app.route('/edit_sold_items/', methods=['GET', 'POST'])
+@app.route('/add_sold_records/', methods=['GET', 'POST'])
 def addSoldRecord():
     items = MerchandiseItems.query.all()
     _dates = DatesOfGames.query.all()
@@ -268,8 +268,10 @@ def editSoldRecords(id):
             flash('Transaction canceled!')
             return redirect(url_for('displaySoldRecords'))
 
-        elif 'done' in request.form:
-            flash('No changes were made!')
+        elif 'delete' in request.form:
+            db_session.delete(modifySold)
+            db_session.commit()
+            flash('Record deleted!')
             return redirect(url_for('displaySoldRecords'))
 
         else:
@@ -286,7 +288,6 @@ def editSoldRecords(id):
             except Exception as e:
                 db_session.rollback()
                 flash('Error, ' + str(e))
-
 
     return render_template('editSoldRecords.html', form=form, \
                             modifySold=modifySold)

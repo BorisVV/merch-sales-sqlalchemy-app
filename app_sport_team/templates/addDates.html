@@ -1,12 +1,8 @@
 {% extends "home.html" %}
 {% block title %}AddDates{% endblock %}
 
-{% block head %}
-  {{super()}}
+{% block content %}
   <h1>Add date, city, and state </h1>
-{% endblock %}
-
-{% block body %}
   <form name="formDates" method="post">
     <dl>
       <dt>Enter date:</dt>
@@ -20,5 +16,4 @@
             <input type="submit" name="cancel" value="Cancel"></dd>
     </dl>
   </form>
-
 {% endblock %}

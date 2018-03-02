@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block title %}Home{% endblock %}
 
-{% block body %}
+{% block content %}
     <h2>This is the home page!</h2>
     {% if items|length() == 0 %}
     <p>No items in the database yet! <br>
@@ -23,12 +23,16 @@
     {% endif %}
 {% endblock %}
 
+{% block notes %}
+  <p id="footer"><h4>Links to other pages/options.</h4></p>
+{% endblock %}
+
 {% block footer %}
-  <h4>Links to other pages/options.</h4>
-  <a href="{{ url_for('addItems') }}"> Add an Item </a><br>
-  <a href="{{ url_for('editItems') }}"> Edit/Delete Items </a><br>
-  <a href="{{ url_for('addDates') }}"> Add Dates for Games </a><br>
-  <a href="{{ url_for('show_dates') }}">Show Games Schedules </a><br>
-  <a href="{{ url_for('addSoldRecord') }}"> Select to Add New Sold Record </a><br>
+  <a href="{{ url_for('home') }}">Home</a><br>
+  <a href="{{ url_for('addItems') }}">Add an Item</a><br>
+  <a href="{{ url_for('addDates') }}">Add Dates for Games</a><br>
+  <a href="{{ url_for('editItems') }}">Edit/Delete Items</a><br>
+  <a href="{{ url_for('addSoldRecord') }}">Add New Sold Record</a><br>
   <a href="{{ url_for('displaySoldRecords') }}"> Display Sold Records</a><br>
+  <a href="{{ url_for('displayGameSched') }}">Display Games Schedules</a><br>
 {% endblock %}

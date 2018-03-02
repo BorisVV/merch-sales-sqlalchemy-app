@@ -1,13 +1,12 @@
 {% extends "home.html" %}
 {% block title %}AddSoldRecord{% endblock %}
 
-{% block body %}
-  <dd>
-    <h3>First select Date and an Item,<br>
-      then enter the quantity sold and the price per unit.
-    </h3>
-    <h4>Select one item from each of the drop down box</h4>
-  </dd>
+{% block content %}
+  <h3>First select Date and an Item,<br>
+    then enter the quantity sold and the price per unit.
+  </h3>
+  <h4>Select one item from each of the drop down box</h4>
+
   <form method="post">
     <dd>
       {% block select %}
@@ -44,7 +43,6 @@
       <input type="submit" name="save" value="Save">
 
       <input type="submit" name="cancel" value="Cancel">
-
     </dd>
   </form>
 {% endblock %}

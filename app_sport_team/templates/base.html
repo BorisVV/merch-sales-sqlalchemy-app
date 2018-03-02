@@ -15,7 +15,8 @@
     {% endblock %}
   </head>
   <body>
-    {% block body %}
+    <div class="content">
+      {% block content %}
       <h1>Welcome</h1>
       <p>
         This is the database to store sold items and prices
@@ -24,20 +25,25 @@
       <p>
         Below is the link to the home page.
       </p>
-    {% endblock %}
+      {% endblock %}
 
-    {% with messages = get_flashed_messages() %}
+      {% with messages = get_flashed_messages() %}
       {% if messages %}
-        <ul class=flashes>
-          {% for message in messages %}
-            <li>{{ message|safe }}</li>
-          {% endfor %}
-        </ul>
+      <ul class=flashes>
+        {% for message in messages %}
+        <li>{{ message|safe }}</li>
+        {% endfor %}
+      </ul>
       {% endif %}
-    {% endwith %}
+      {% endwith %}
+    </div>
   </body>
 
 <footer>
+  <div class="notes_footer">
+    {% block notes %}{% endblock %}
+  </div>
+
   <div class="footer">
     {% block footer %}
       <h2><a href="{{ url_for('home') }}">Go to home page</a></h2>

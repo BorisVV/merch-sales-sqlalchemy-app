@@ -1,11 +1,11 @@
 {% extends "home.html" %}
 {% block title %}DisplayRecords{% endblock %}
 
-{% block body %}
+{% block content %}
   <table>
       <caption><h3>Table of sold items!</h3> </caption>
       <tr>
-        <th>No.</th>
+        <th>Index</th>
         <th>ItemName</th>
         <th>Date</th>
         <th>City</th>
@@ -16,9 +16,9 @@
       </tr>
       {% for row in itemsSold %}
       <tr>
-        <td>{{ row.id }}</td>
+        <td>{{ loop.index }}</td>
         <td>{{ row.merchandise_items.name}}</td>
-        <td>{{ row.games_schedules.game_date|dateformat }}</td>
+        <td>{{ row.games_schedules.game_date }}</td>
         <td>{{ row.games_schedules.city }}</td>
         <td>{{ row.games_schedules.state }}</td>
         <td>{{ row.quantity_sold }}</td>
