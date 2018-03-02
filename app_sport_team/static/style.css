@@ -1,22 +1,21 @@
 .content {
-  margin-top: 3%;
-  margin-left: 5%;
+  margin: 5%;
 }
 
 .footer {
+  padding: .5em;
   border: 1px solid black;
-  margin-bottom: 5%;
-  margin-left: 5%;
-  margin-right: 74%;
+  margin: 5%; width: 18%;
   text-align: center;
 }
+
 .notes_footer{
   margin-left: 5%;
-  margin-right: 74%;
 }
 
 table, th, td {
+  text-align: center;
   border: 1px solid black;
   border-collapse: collapse;
-  padding-right: 1.0em;
+  padding: 8px;
 }

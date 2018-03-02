@@ -11,21 +11,12 @@
       src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js">
       </script>
       <title>{% block title %}Welcome{% endblock %}</title>
-      <a href="{{ url_for('base') }}"></a>
     {% endblock %}
   </head>
+
   <body>
     <div class="content">
-      {% block content %}
-      <h1>Welcome</h1>
-      <p>
-        This is the database to store sold items and prices
-        for games played in a selected date.<br>
-      </p>
-      <p>
-        Below is the link to the home page.
-      </p>
-      {% endblock %}
+      {% block content %}{% endblock %}
 
       {% with messages = get_flashed_messages() %}
       {% if messages %}
@@ -39,15 +30,20 @@
     </div>
   </body>
 
-<footer>
-  <div class="notes_footer">
-    {% block notes %}{% endblock %}
-  </div>
-
-  <div class="footer">
-    {% block footer %}
-      <h2><a href="{{ url_for('home') }}">Go to home page</a></h2>
-    {% endblock %}
-  </div>
-</footer>
+  <footer>
+    <div class="footer">
+      {% block footer %}
+        <a href="{{ url_for('addItems') }}">Add an Item</a><br>
+        <a href="{{ url_for('addDates') }}">Add Dates for Games</a><br>
+        <a href="{{ url_for('addSoldRecord') }}">Add New Sold Record</a><br>
+        <a href="{{ url_for('editItems') }}">Edit/Delete Items</a><br>
+        <a href="{{ url_for('displaySoldRecords') }}"> Display Sold Records</a><br>
+        <a href="{{ url_for('displayGameSched') }}">Display Games Schedules</a><br>
+      {% endblock %}
+    </div>
+    
+    <div class="notes_footer">
+      {% block notes %}{% endblock %}
+    </div>
+  </footer>
 </html>

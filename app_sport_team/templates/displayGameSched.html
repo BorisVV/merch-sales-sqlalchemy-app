@@ -1,26 +1,28 @@
-{% extends "home.html" %}
+{% extends "layout.html" %}
 {% block title %}ShowDates{% endblock %}
 
 {% block tableItems %}{% endblock %}
 
 {% block content %}
-  <h3>Showing dates...</h3>
-  <h4>Here is the table of game's dates!</h4>
   <table>
-      <tr>
-        <th>Index</th>
-        <th>Date</th>
-        <th>City</th>
-        <th>State</th>
-      </tr>
+    <caption><h3>Table of game's dates!</h3></caption>
+    <tr>
+      <th>Index</th>
+      <th>Date</th>
+      <th>City</th>
+      <th>State</th>
+    </tr>
     {% for element in _dates %}
       <tr>
         <td>{{ loop.index }}</td>
         <td>{{ element.game_date|dateformat }}</td>
         <td>{{ element.city }}</td>
         <td>{{ element.state }}</td>
-        <td><a href="{{ element.url }}">Edit schedule</a> </td>
+        <td><a href="{{ element.url }}">edit</a> </td>
       </tr>
     {% endfor %}
   </table>
+  <h3>
+    Add more dates?  <a href="{{ url_for('addDates') }}">Link</a>
+  </h3>
 {% endblock %}

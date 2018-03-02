@@ -9,20 +9,12 @@ from app_sport_team.tables_setUp import \
 from app_sport_team import utils
 
 # For example purpose, this is the first pages displayed.
-@app.route('/')
-def base(): # TODO: remove in future.
-    return render_template('base.html')
-
-# This page will display the table for the items and options for others pages.
-@app.route('/home/')
-def home():
-    items = MerchandiseItems.query.all()
-    games = DatesOfGames.query.all()
-    return render_template('home.html', items=items, games=games)
-
 # :flash: In the base.html there is a block inside the body block that exexutes
 # the messsages. uses the syntax (var = get_flashed_messages()) and
 # will display messages for users to read and correct inputs, etc.
+@app.route('/')
+def index(): # TODO: remove in future.
+    return render_template('index.html')
 
 # User can enter new items, form is displayed.
 @app.route('/add_items/', methods=['GET', 'POST'])
@@ -31,7 +23,7 @@ def addItems():
     if request.method == 'POST':
 
         if 'cancel' in request.form:
-            return redirect(url_for('home'))
+            return redirect(url_for('index'))
 
         else:
             # Save button was clicked.
@@ -97,7 +89,7 @@ def editItems():
                 return render_template('editItems.html', items=items, item_id=items_row.id, new_name=new_name)
 
         else: # If cancel button is clicked.
-            return redirect(url_for('home'))
+            return redirect(url_for('index'))
 
     return render_template('editItems.html', items=items)
 
@@ -110,7 +102,7 @@ def addDates():
         state = request.form['state']
 
         if 'cancel' in request.form:
-            return redirect(url_for('home'))
+            return redirect(url_for('index'))
 
         else:
             # This is to make sure that boxes are not empty.
@@ -200,7 +192,7 @@ def addSoldRecord():
     if request.method == 'POST':
 
         if 'cancel' in request.form:
-            return redirect(url_for('home'))
+            return redirect(url_for('index'))
 
         # In the html there is a select and options. The values/id are
         # collected from the select for both item and date.
