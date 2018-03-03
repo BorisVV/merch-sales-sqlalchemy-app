@@ -140,7 +140,7 @@ def displayGameSched():
     return render_template('displayGameSched.html', _dates=DatesOfGames.query.all())
 
 @app.route('/edit_schedules/<int:id>/', methods=['GET', 'POST'])
-def edit_schedules(id):
+def editDates(id):
     sched = DatesOfGames.query.get(id)
     # Date is in the form Y-m-d @ m:s:.etc which is bad for
     # reding, the strftime solves that problem.
@@ -183,8 +183,8 @@ def edit_schedules(id):
                 return redirect(url_for('displayGameSched'))
             except:
                 flash('Something went wrong')
-                return redirect(url_for('edit_schedules'))
-    return render_template('edit_schedules.html', form=form, sched=sched)
+                return redirect(url_for('editDates'))
+    return render_template('editDates.html', form=form, sched=sched)
 
 @app.route('/add_sold_records/', methods=['GET', 'POST'])
 def addSoldRecord():
