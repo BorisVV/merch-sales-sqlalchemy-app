@@ -84,7 +84,7 @@ class DatesOfGames(Base):
 
     @property
     def url(self):
-        return url_for('edit_schedules', id=self.id)
+        return url_for('editDates', id=self.id)
 
     def __repr__(self):
         return "{} {} {}".format(self.game_date, self.city, self.state)

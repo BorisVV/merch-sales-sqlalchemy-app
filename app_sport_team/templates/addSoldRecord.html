@@ -3,12 +3,12 @@
 
 {% block content %}
   {% if _dates|count() == 0 %}
-      <h3>There are not dates in db.</h3>
+      <h3>There are not records in db.</h3>
       <p>Click on this link to
         <a href="{{ url_for('addDates') }}">add dates?</a>
       </p>
   {% elif items|count() == 0 %}
-      <h3>There are items in the db.</h3>
+      <h3>There are items/names in the db.</h3>
       <p>Click on this link to
         <a href="{{ url_for('addItems') }}">add items?</a>
       </p>
@@ -53,4 +53,6 @@
     </form>
   {% endif %}
 {% endblock %}
-{% block footer %}Working...{% endblock %}
+{% block footer %}
+<a href="{{ url_for('index') }}">Go back to home page.</a>
+{% endblock %}

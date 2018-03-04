@@ -16,6 +16,10 @@
         <input type="submit" name="save" value="Save">
         <input type="submit" name="cancel" value="Cancel">
       </dl>
+      <a href="{{ url_for('displayGameSched') }}">Display/Edit Game's Dates.</a>
     </dd>
   </form>
+{% endblock %}
+{% block footer %}
+<a href="{{ url_for('index') }}">Go back to home page.</a>
 {% endblock %}

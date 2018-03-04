@@ -31,11 +31,13 @@
           <td>{{ row.quantity_sold }}</td>
           <td>{{ '$ '|safe }} {{ row.price_per_unit }}</td>
           <td>{{ '$ '|safe }} {{ row.totalCost() }}</td>
-          <td><a href="{{ row.url }}">edit/delete</a></td>
+          <td><a href="{{ row.url }}">edit</a></td>
         </tr>
         {% endfor %}
     </table>
-    <p>Add a new record for a date?   <a href="{{ url_for('addSoldRecord') }}">Click here</a> </p>
+    <p>Do you want to add a new record?   <a href="{{ url_for('addSoldRecord') }}">Click here</a> </p>
   {% endif %}
 {% endblock %}
-{% block footer %}Working...{% endblock %}
+{% block footer %}
+<a href="{{ url_for('index') }}">Go back to home page.</a>
+{% endblock %}

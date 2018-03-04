@@ -2,19 +2,19 @@
 
 {% block title %}Edit Schedules{% endblock %}
 
-{% block content %}
+{% block content %layout
   <h4>This page is editing or deleting game's schedules.</h4>
   <p>You have the choice to delete or update the schedule.</p>
   <form method="post">
     <dd>
-      Date:<br>
-      <input type="date" name="date" value="{{ sched.game_date|dateformat }}">
+      Date: {{ sched.game_date|dateformat }}<br>
+      <input type="date" name="date" value="{{ form['_date'] }}">
       <br><br>
-      City:<br>
-      <input type="text" name="city" value="{{ sched.city }}">
+      City: {{ sched.city }}<br>
+      <input type="text" name="city" value="{{ form['city'] }}" placeholder="{{ sched.city }}">
       <br><br>
-      State:<br>
-      <input type="text" name="state" value="{{ sched.state }}">
+      State: {{ sched.state }}<br>
+      <input type="text" name="state" value="{{ form['state'] }}" placeholder="{{ sched.state }}">
       <br>
 
       <br>
@@ -24,5 +24,6 @@
     </dd>
   </form>
 {% endblock %}
-
-{% block footer %}<a href="{{ url_for('index') }}">'Welecome' page</a> {% endblock %}
+{% block footer %}
+<a href="{{ url_for('index') }}">Go back to home page.</a>
+{% endblock %}

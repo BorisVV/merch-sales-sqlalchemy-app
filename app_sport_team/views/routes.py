@@ -24,7 +24,7 @@ def addItems():
 
         if 'cancel' in request.form:
             flash('The option to add items was canceled!')
-            return redirect(url_for('displaySoldRecords'))
+            return redirect(url_for('index'))
 
         else:
             # Save button was clicked.
@@ -48,6 +48,14 @@ def addItems():
             return redirect(url_for('addItems')) # option to add more.
 
     return render_template('addItems.html', items=items)
+
+@app.route('/display_items/')
+def displayItems():
+    items=MerchandiseItems.query.all()
+    if not items:
+        flash('There are not item in db. Add some first.')
+        return redirect(url_for('addItems'))
+    return render_template('displayItems.html', items=items)
 
 @app.route('/edit_items/', methods=['GET', 'POST'])
 def editItems():
@@ -104,7 +112,7 @@ def addDates():
 
         if 'cancel' in request.form:
             flash('The add dates option was canceled!')
-            return redirect(url_for('displaySoldRecords'))
+            return redirect(url_for('index'))
 
         else:
             # This is to make sure that boxes are not empty.
@@ -126,10 +134,10 @@ def addDates():
                 .format(date_game, city, state)
                 )
                 return redirect(url_for('addDates'))
-            except Exception as e:
-                db_session.rollback() # TODO overdoing?
+            except:
+                db_session.rollback()
                 flash('Date {} is already in file it can\'t be used twice!'.format(date_game))
-                flash('Or this happened ' + str(e))
+
                 return render_template('addDates.html',\
                     date_game=date_game, city=city, state=state)
 
@@ -137,7 +145,11 @@ def addDates():
 
 @app.route('/display_games_sched/')
 def displayGameSched():
-    return render_template('displayGameSched.html', _dates=DatesOfGames.query.all())
+    _dates=DatesOfGames.query.all()
+    if not _dates:
+        flash('There are dates in db. Add some first')
+        return redirect(url_for('addDates'))
+    return render_template('displayGameSched.html')
 
 @app.route('/edit_schedules/<int:id>/', methods=['GET', 'POST'])
 def editDates(id):
@@ -190,52 +202,63 @@ def editDates(id):
 def addSoldRecord():
     items = MerchandiseItems.query.all()
     _dates = DatesOfGames.query.all()
+    soldRec = SalesOfItems.query.all()
 
     # TODO:  Create a form dict for render_template.
 
     if request.method == 'POST':
 
         if 'cancel' in request.form:
+            flash('Transaction canceled!')
             return redirect(url_for('displaySoldRecords'))
 
-        else:
+        else: # Save was clicked.
             # In the html there is a select and options. The values/id are
             # collected from the select for both item and date.
-            item_id = int(request.form['selected_item'])
+
+            # This two lines below are for example only/ both get the full row
+            # name_row = MerchandiseItems.query.get(request.form['selected_item'])
+            # _date_row = DatesOfGames.query.get(request.form['selected_date'])
+
             date_id = int(request.form['selected_date'])
+            item_id = int(request.form['selected_item'])
 
-            # This two lines below are for example only.
-            # name = MerchandiseItems.query.get(request.form['selected_item'])
-            # _date = DatesOfGames.query.get(request.form['selected_date'])
+            for row in soldRec:
+                if date_id == row._date_id and item_id == row.item_id:
+                    # _date()
+                    flash('There is a row with the record, date= {} and name= {}. <br> \
+                    Already in file. <br> Click edit to update the above record!' \
+                    .format(row.games_schedules.game_date, row.merchandise_items.name))
+                    return redirect(url_for('displaySoldRecords'))
 
-            # The input has the values for qty and price.
+            # For qty the box is a numeric type so theres no need to convert it.
             qty = request.form['quantity']
-            price = request.form['price']
 
-            # The price is a string and needs to be converted to float and if
-            # the input is not a number it will raise an Exception.
+            # For price the box is a text type and needs to be converted to float.
+            price = request.form['price']
             try:
                 price = float(price)
-
-                # for small example we need to keep data small.
-                if price < 1 or price > 150:
-                    flash('Make sure the price is between 1.00 and 150.00.\
-                        <br>You entered %r' % price)
+                # for small example we need to keep numbers small.
+                if price < 0 or price > 150:
+                    flash('Make sure the price is between 0.00 and 150.00.\
+                    <br>You entered %r' % price)
                     return render_template('addSoldRecord.html',\
-                            items=items, _dates=_dates, item_id=item_id, \
-                            date_id=date_id, qty=qty, price='')
-                else:
-                    db_session.add(SalesOfItems(item_id=item_id, _date_id=date_id, quantity_sold=qty, price_per_unit=price))
-                    db_session.commit()
-                    flash('Record added and saved succesfully!')
-                    return redirect(url_for('displaySoldRecords'))
+                    items=items, _dates=_dates, item_id=item_id, \
+                    date_id=date_id, qty=qty, price='')
             except:
                 # The input was a string not a numeric value.
-                flash('Check price and make sure is a number. <br>\
-                        You entered %r' % price)
+                flash('Check box price and make sure is a numeric value. <br>\
+                        You entered {}'.format(price))
                 return render_template('addSoldRecord.html',\
-                        items=items, _dates=_dates, item_id=item_id, \
-                        date_id=date_id, qty=qty, price=price)
+                                    items=items, _dates=_dates, item_id=item_id, \
+                                    date_id=date_id, qty=qty, price=price)
+
+
+            # If not nothing fails above.
+            db_session.add(SalesOfItems(item_id=item_id, _date_id=date_id, quantity_sold=qty, price_per_unit=price))
+            db_session.commit()
+            flash('Record added and saved succesfully!')
+            return redirect(url_for('displaySoldRecords'))
 
     return render_template('addSoldRecord.html', items=items, _dates=_dates)
 
