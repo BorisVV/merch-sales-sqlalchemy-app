@@ -53,7 +53,7 @@ def addItems():
 def displayItems():
     items=MerchandiseItems.query.all()
     if not items:
-        flash('There are not item in db. Add some first.')
+        flash('There are not items in db. Add some first.')
         return redirect(url_for('addItems'))
     return render_template('displayItems.html', items=items)
 
@@ -147,9 +147,9 @@ def addDates():
 def displayGameSched():
     _dates=DatesOfGames.query.all()
     if not _dates:
-        flash('There are dates in db. Add some first')
+        flash('There are not dates in db. Add some first.')
         return redirect(url_for('addDates'))
-    return render_template('displayGameSched.html')
+    return render_template('displayGameSched.html', _dates=_dates)
 
 @app.route('/edit_schedules/<int:id>/', methods=['GET', 'POST'])
 def editDates(id):
@@ -204,6 +204,17 @@ def addSoldRecord():
     _dates = DatesOfGames.query.all()
     soldRec = SalesOfItems.query.all()
 
+    # We need to verify that there are records in db. first.
+    if not items:
+        flash('Warning!!! There not items in db, you first need to add items.<br>' \
+                'Then you can add Sold Records.')
+        return redirect(url_for('addItems'))
+    if not _dates:
+        flash('Warning!!! There not dates in db, you first need to add dates.<br>' \
+                'Then you can add Sold Records.')
+        return redirect(url_for('addDates'))
+
+
     # TODO:  Create a form dict for render_template.
 
     if request.method == 'POST':
@@ -225,10 +236,11 @@ def addSoldRecord():
 
             for row in soldRec:
                 if date_id == row._date_id and item_id == row.item_id:
-                    # _date()
-                    flash('There is a row with the record, date= {} and name= {}. <br> \
-                    Already in file. <br> Click edit to update the above record!' \
-                    .format(row.games_schedules.game_date, row.merchandise_items.name))
+                    _date = str(row.games_schedules.game_date).replace('00:00:00', ' ')
+                    flash('Warning!!! Transaction canceled!')
+                    flash('Name= {} and Date= {} is already in file. <br> \
+                    Click edit to update the above record!' \
+                    .format(row.merchandise_items.name, _date))
                     return redirect(url_for('displaySoldRecords'))
 
             # For qty the box is a numeric type so theres no need to convert it.

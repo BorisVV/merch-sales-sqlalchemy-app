@@ -13,10 +13,9 @@
         <caption>Table of sold items!</caption>
         <tr>
           <th>Index</th>
-          <th>Date</th>
-          <th>City</th>
-          <th>State</th>
           <th>Name</th>
+          <th>Date</th>
+          <th>City/State</th>
           <th>QtySold</th>
           <th>Price/Unit</th>
           <th>Total</th>
@@ -24,10 +23,9 @@
         {% for row in itemsSold %}
         <tr>
           <td>{{ loop.index }}</td>
-          <td>{{ row.games_schedules.game_date|dateformat }}</td>
-          <td>{{ row.games_schedules.city }}</td>
-          <td>{{ row.games_schedules.state }}</td>
           <td>{{ row.merchandise_items.name}}</td>
+          <td>{{ row.games_schedules.game_date|dateformat }}</td>
+          <td>{{ row.games_schedules.city }}, {{ row.games_schedules.state }}</td>
           <td>{{ row.quantity_sold }}</td>
           <td>{{ '$ '|safe }} {{ row.price_per_unit }}</td>
           <td>{{ '$ '|safe }} {{ row.totalCost() }}</td>

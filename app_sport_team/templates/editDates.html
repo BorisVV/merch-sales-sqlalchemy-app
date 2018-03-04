@@ -1,10 +1,11 @@
 {% extends "layout.html" %}
 
-{% block title %}Edit Schedules{% endblock %}
+{% block title %}Edit/Schedules{% endblock %}
 
-{% block content %layout
-  <h4>This page is editing or deleting game's schedules.</h4>
-  <p>You have the choice to delete or update the schedule.</p>
+{% block content %}
+  <h4>You have the choice to edit or delete the selected date.</h4>
+  <p>Warning!!!</p>
+  <p>Deleting the game's date will delete rows that have this date in Sold Records.</p>
   <form method="post">
     <dd>
       Date: {{ sched.game_date|dateformat }}<br>
