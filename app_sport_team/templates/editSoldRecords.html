@@ -2,23 +2,65 @@
 {% block title %}EditSoldRecord{% endblock %}
 
 {% block content %}
-  <h3>This page is to edit the row for date selected.</h3>
-  <p>You can only edit the quantity and price.</p>
+  <script type=text/javascript>
+  $(function() {
+    $('input[name="delete"]').click(function() {
+      if (!confirm("Do you really want to delete this record?\n\n" +
+      "THIS WILL DELETE THE COMPLETE ROW (RECORDS)."))
+      return false;
+    });
+  });
+  </script>
 
-  <form action="{{ modifySold.url }}" method="post">
+  <h3>Edit or Delete the selected row.</h3>
+  <p>Warning! Deleting the row will only delete it on the Sold Record table.</p>
+  <p>To delete a date click
+    <a href="{{ url_for('editDates', id=modifySold.games_schedules.id) }}">here</a>
+  </p>
+  <p>To delete a name click
+    <a href="{{ url_for('editItems') }}">here</a>
+  </p>
+
+  <form method="post">
     <dd>
-      Game Date: {{ form['_date']|dateformat }}
-      <br>
-      Item name: {{ form['name'] }}
       <dl>
-        <dt><sub>Enter new quantity sold/old is in box:</sub></dt>
-        <input type="number" name="quantity" value="{{ form['qty'] }}" min="0" max="500" required placeholder="0"><br>
-        <dt><sub>Enter new price/old is in box:</sub></dt>
-        <input type="text" name="price" value="{{ form['price'] }}" min="0" required placeholder="0.00">
+        Date:<br>
+        <select name="date_selected">
+          {% for date in _dates %}
+            <option value="{{ date.id }}" {% if date.id == modifySold._date_id %} selected {% endif %}>
+              {{ date.game_date|dateformat }} {{  date.city }} {{ date.state}}
+            </option>
+          {% endfor %}
+        </select>
+        <sup>Updating "{{ modifySold.games_schedules.game_date|dateformat }}"</sup>
+        <br><br>
+
+        Name:<br>
+        <select name="name_selected">
+          {% for name in names %}
+            <option value="{{ name.id }}" {% if name.id == modifySold.item_id %} selected {% endif %}>
+              {{ name.name }}
+            </option>
+          {% endfor %}
+        </select>
+        <sup>Updating "{{ modifySold.merchandise_items.name }}"</sup>
+        <br><br>
+
+        <dt><sub>Quantity:</sub></dt>
+        <input type="number" name="quantity" value="{{ modifySold.quantity_sold }}" min="0" max="500" required placeholder="0">
+        <sup>Updating "{{ modifySold.quantity_sold }}"</sup>
+        <br><br>
+
+        <dt><sub>Price:</sub></dt>
+        <input type="text" name="price" value="{{ modifySold.price_per_unit }}" min="0" required placeholder="0.00">
+        <sup>Updating "{{ modifySold.price_per_unit }}"</sup>
+        <br><br>
+
+        <input type="submit" name="update" value="Update">
+        <input type="submit" name="delete" value="Delete">
+        <input type="submit" name="cancel" value="Cancel">
       </dl>
-      <br>
-      <input type="submit" name="save" value="Save">
-      <input type="submit" name="cancel" value="Cancel">
+      <a href="{{ url_for('displaySoldRecords') }}">Go back to Records.</a>
     </dd>
   </form>
 {% endblock %}

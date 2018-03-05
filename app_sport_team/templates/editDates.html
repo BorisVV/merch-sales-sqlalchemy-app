@@ -3,28 +3,48 @@
 {% block title %}Edit/Schedules{% endblock %}
 
 {% block content %}
+<script type=text/javascript>
+$(function() {
+  $('input[name="delete"]').click(function() {
+    if (!confirm("Do you really want to delete this Item?\n\n" +
+    "THIS WILL DELETE THE DATES IN SOLD RECORDS AS WELL."))
+    return false;
+  });
+});
+</script>
+
   <h4>You have the choice to edit or delete the selected date.</h4>
   <p>Warning!!!</p>
-  <p>Deleting the game's date will delete rows that have this date in Sold Records.</p>
+  <p>
+    Deleting the game's date will delete rows that have this date in Sold Records.<br>
+    <sup><a href="{{ url_for('displaySoldRecords') }}">Go to Sold Records</a> </sup>
+  </p>
   <form method="post">
     <dd>
-      Date: {{ sched.game_date|dateformat }}<br>
-      <input type="date" name="date" value="{{ form['_date'] }}">
-      <br><br>
-      City: {{ sched.city }}<br>
-      <input type="text" name="city" value="{{ form['city'] }}" placeholder="{{ sched.city }}">
-      <br><br>
-      State: {{ sched.state }}<br>
-      <input type="text" name="state" value="{{ form['state'] }}" placeholder="{{ sched.state }}">
-      <br>
+      <dl>
+        Date: <br>
+        <input type="date" name="date" value="{{ form['_date']|dateformat }}">
+        <sup>original date "{{ sched.game_date|dateformat }}"</sup>
+        <br><br>
+        City: <br>
+        <input type="text" name="city" value="{{ form['city'] }}">
+        <sup>original date "{{ sched.city }}"</sup>
+        <br><br>
+        State: <br>
+        <input type="text" name="state" value="{{ form['state'] }}">
+        <sup>original date "{{ sched.state }}"</sup>
+        <br>
 
-      <br>
-      <input type="submit" name="delete" value="Delete">
-      <input type="submit" name="uddate" value="Update">
-      <input type="submit" name="cancel" value="Cancel">
+        <br>
+        <input type="submit" name="uddate" value="Update">
+        <input type="submit" name="delete" value="Delete">
+        <input type="submit" name="cancel" value="Cancel">
+      </dl>
+      <a href="{{ url_for('displayGameSched') }}">Go to game's schedule</a>
     </dd>
   </form>
 {% endblock %}
+
 {% block footer %}
 <a href="{{ url_for('index') }}">Go back to home page.</a>
 {% endblock %}

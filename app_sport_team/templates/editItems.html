@@ -17,7 +17,7 @@
   <form  method=post>
     <dl>
       <h4>Select one from the drop down box:</h4>
-      <select class="" name="_item_id">
+      <select class="" name="item_selected">
         {% for element in items %}
           <!-- <option {% if element.id %} selected {% endif %} -->
           <option
@@ -25,17 +25,20 @@
           </option>
         {% endfor %}
       </select>
+      <sup>Click to <a href="{{ url_for('addItems') }}">add new items</a> </sup>
 
       <dt><sub>Update selected item with new name here.</sub></dt>
       <input type="text" name="new_name" value="{{ new_name }}"><br>
 
       <br>
-      <input type="submit" name="delete" value="Delete">
       <input type="submit" name="update" value="Update name">
+      <input type="submit" name="delete" value="Delete">
       <input type="submit" value="Cancel">
     </dl>
+    <a href="{{ url_for('displayItems') }}">Display all items</a>
   </form>
-{% endblo{% block footer %}
+{% endblock %}
+
+{% block footer %}
 <a href="{{ url_for('index') }}">Go back to home page.</a>
 {% endblock %}
-ck %}

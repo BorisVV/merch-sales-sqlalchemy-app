@@ -43,7 +43,7 @@ def addItems():
             # The new name will be add if passed the above stataments.
             db_session.add(MerchandiseItems(name=new_name))
             db_session.commit()
-            flash('Success! %r was added.' % new_name + '<br>Do you want ' \
+            flash('Success! "{}" was added.'.format(new_name) + '<br>Do you want ' \
                     'to add another one? "Cancel to exit"')
             return redirect(url_for('addItems')) # option to add more.
 
@@ -63,39 +63,39 @@ def editItems():
     items = MerchandiseItems.query.all()
     if request.method == 'POST':
         # Query to get the item's name with the selected id from the form.
-        items_row = MerchandiseItems.query.get(request.form['_item_id'])
-        # item_id = request.form['_item_id'] # gets the id number only.
+        item_row = MerchandiseItems.query.get(request.form['item_selected'])
+        # item_id = request.form['item_selected'] # gets the id number only.
 
         if 'delete' in request.form:
-            name = items_row.name # Store old name.
-            db_session.delete(items_row)
+            name = item_row.name # Store old name.
+            db_session.delete(item_row)
             db_session.commit()
-            flash('%r was deleted <br> Do you want to delete/update more.\
-                    <br>"Cancel" to quit.' % name)
-            return render_template('editItems.html', items=items)
+            flash('{} was deleted <br> Do you want to delete/update more.\
+                    <br>"Cancel" to quit.'.format(name))
+            return render_template('editItems.html', items=MerchandiseItems.query.all())
 
         elif 'update' in request.form:
             new_name = request.form['new_name']
             if new_name == "":
                 flash('Text box cannot be blank, name required! <br> \
-                        Enter new  name for the selected name! --> ' + items_row.name)
-                return render_template('editItems.html', items=items, item_id=items_row.id)
+                        Enter new  name for the selected name! --> ' + item_row.name)
+                return render_template('editItems.html', items=items, item_id=item_row.id)
 
             try:
-                old_name = items_row.name # Stored to display old name.
-                items_row.name = new_name.capitalize() # Change the name.
+                old_name = item_row.name # Stored to display old name.
+                item_row.name = new_name.capitalize() # Change the name.
                 db_session.commit()
                 # Display message.
-                flash('%r was updated succesfully! with --> %r' \
-                        % (old_name, items_row.name))
+                flash('"{}" was updated succesfully! with --> "{}"' \
+                        .format(old_name, item_row.name))
                 flash('delete/update another? "Cancel" to quit')
                 # Render the template again with the updated item selected.
-                return render_template('editItems.html', items=items, item_id=items_row.id)
+                return render_template('editItems.html', items=items, item_id=item_row.id)
             except:
                 db_session.rollback() # If not Exception will raise.
                 flash('%r is already in file, try a different name' % new_name)
                 # Re-render the template with the users inputs.
-                return render_template('editItems.html', items=items, item_id=items_row.id, new_name=new_name)
+                return render_template('editItems.html', items=items, item_id=item_row.id, new_name=new_name)
 
         else: # If cancel button is clicked.
             return redirect(url_for('index'))
@@ -125,7 +125,7 @@ def addDates():
             # already in db.
             try:
                 dt = utils.format_date(date_game)
-                db_session.add(DatesOfGames(game_date=dt, city=city, state=state))
+                db_session.add(DatesOfGames(game_date=dt, city=city, state=state.upper()))
                 db_session.commit()
                 flash('Success! <br> \
                 Date: {}, City: {}, State: {} <br> \
@@ -154,16 +154,20 @@ def displayGameSched():
 @app.route('/edit_schedules/<int:id>/', methods=['GET', 'POST'])
 def editDates(id):
     sched = DatesOfGames.query.get(id)
+    dates_in_soldRecords = SalesOfItems.query.filter_by(date_id=id).all()
+
+     # category = Category.query.filter_by(slug=slug).first()
+     # snippets = category.snippets.order_by(Snippet.title).all()
+
     # Date is in the form Y-m-d @ m:s:.etc which is bad for
     # reding, the strftime solves that problem.
     dt = datetime.strftime(sched.game_date, '%Y-%m-%d')
+
     # This is to display the deleted information.
     dt_str = tuple((dt, str(sched.city), str(sched.state)))
 
-    form = dict(_date="", city="", state="")
+    form = dict(_date=sched.game_date, city=sched.city, state=sched.state)
     if request.method == 'POST':
-        if 'cancel' in request.form:
-            return redirect(url_for('displayGameSched'))
 
         # Format date to convert it to sqlalchey DateTime
         form['_date'] = utils.format_date(request.form['date'])
@@ -177,9 +181,14 @@ def editDates(id):
         if form['state'] == "":
             form['state'] = sched.state
 
+        if 'cancel' in request.form:
+            return redirect(url_for('index'))
+
         # Assuming that nothing goes wrong.
-        if 'delete' in request.form:
+        elif 'delete' in request.form:
             db_session.delete(sched)
+            for record in dates_in_soldRecords:
+                db_session.delete(record)
             db_session.commit()
             flash('Deleted ' + str(dt_str))
             return redirect(url_for('displayGameSched'))
@@ -206,11 +215,11 @@ def addSoldRecord():
 
     # We need to verify that there are records in db. first.
     if not items:
-        flash('Warning!!! There not items in db, you first need to add items.<br>' \
+        flash('Warning!!! <br> There not items in db, you first need to add items.<br>' \
                 'Then you can add Sold Records.')
         return redirect(url_for('addItems'))
     if not _dates:
-        flash('Warning!!! There not dates in db, you first need to add dates.<br>' \
+        flash('Warning!!! <br> There not dates in db, you first need to add dates.<br>' \
                 'Then you can add Sold Records.')
         return redirect(url_for('addDates'))
 
@@ -233,21 +242,23 @@ def addSoldRecord():
 
             date_id = int(request.form['selected_date'])
             item_id = int(request.form['selected_item'])
+            # For qty the box is a numeric type so theres no need to convert it.
+            qty = request.form['quantity']
+            # For price the box is a text type and needs to be converted to float.
+            price = request.form['price']
 
             for row in soldRec:
                 if date_id == row._date_id and item_id == row.item_id:
                     _date = str(row.games_schedules.game_date).replace('00:00:00', ' ')
-                    flash('Warning!!! Transaction canceled!')
+                    flash('Warning!!! <br> Transaction canceled!')
                     flash('Name= {} and Date= {} is already in file. <br> \
-                    Click edit to update the above record!' \
+                           Go to link above "sold records" to edit the record.' \
                     .format(row.merchandise_items.name, _date))
-                    return redirect(url_for('displaySoldRecords'))
 
-            # For qty the box is a numeric type so theres no need to convert it.
-            qty = request.form['quantity']
+                    return render_template('addSoldRecord.html',\
+                                    items=items, _dates=_dates, item_id=item_id, \
+                                    date_id=date_id, qty=qty, price=price)
 
-            # For price the box is a text type and needs to be converted to float.
-            price = request.form['price']
             try:
                 price = float(price)
                 # for small example we need to keep numbers small.
@@ -265,38 +276,37 @@ def addSoldRecord():
                                     items=items, _dates=_dates, item_id=item_id, \
                                     date_id=date_id, qty=qty, price=price)
 
-
             # If not nothing fails above.
             db_session.add(SalesOfItems(item_id=item_id, _date_id=date_id, quantity_sold=qty, price_per_unit=price))
             db_session.commit()
-            flash('Record added and saved succesfully!')
-            return redirect(url_for('displaySoldRecords'))
+            flash('Record added and saved succesfully! <br> Add more?')
+            return render_template('addSoldRecord.html', date_id=date_id, item_id=item_id, price=price, qty=qty, _dates=_dates, items=items)
 
     return render_template('addSoldRecord.html', items=items, _dates=_dates)
 
 @app.route('/display_redords/')
 def displaySoldRecords():
-    return render_template('displaySoldRecords.html', itemsSold=SalesOfItems.query.all())
+    itemsSold = SalesOfItems.query.order_by(SalesOfItems._date_id).all()
+    if not itemsSold:
+        flash('Warning!!! <br> There are not sold records in db. Add some first!')
+    return render_template('displaySoldRecords.html', itemsSold=itemsSold)
 
 @app.route('/edit_sold_records/<int:id>/', methods=['GET', 'POST'])
 def editSoldRecords(id):
     # id is from the displaySoldRecords.html
     modifySold = SalesOfItems.query.get(id)
+    _dates = DatesOfGames.query.all()
+    names = MerchandiseItems.query.all()
 
-    if modifySold is None:
-        flash('Issues with id...')
-        return redirect(url_for('displaySoldRecords'))
-
-    form = dict(qty=modifySold.quantity_sold, \
-                price=modifySold.price_per_unit, \
-                name=modifySold.merchandise_items.name, \
-                _date=modifySold.games_schedules.game_date
-                )
     if request.method == 'POST':
+        date_id = int(request.form['date_selected'])
+        item_id = int(request.form['name_selected'])
+        qty = int(request.form['quantity'])
+        price = request.form['price']
 
         if 'cancel' in request.form:
             flash('Transaction canceled!')
-            return redirect(url_for('displaySoldRecords'))
+            return redirect(url_for('index'))
 
         elif 'delete' in request.form:
             db_session.delete(modifySold)
@@ -305,19 +315,48 @@ def editSoldRecords(id):
             return redirect(url_for('displaySoldRecords'))
 
         else:
-            form['qty'] = request.form['quantity']
-            form['price'] = request.form['price']
-
+            # print('date', date_id, 'item', item_id, 'qty', qty, 'price', price)
+            # print('modidfadsf', modifySold, modifySold.date_id, modifySold.item_id)
             # The table takes a float for price, try/except is very handy here.
             try:
-                new_price = float(form['price'])
-                modifySold.quantity_sold = form['qty']
-                modifySold.price_per_unit = new_price
-                db_session.commit()
-                flash('Success, data updated!!')
+                price = float(price)
+
+                if date_id == modifySold._date_id and \
+                        item_id == modifySold.item_id and \
+                        qty == modifySold.quantity_sold and \
+                        price == modifySold.price_per_unit:
+                    flash('Ther were no changes made!')
+                    return redirect(url_for('displaySoldRecords'))
+
+                elif date_id == modifySold._date_id and \
+                        item_id == modifySold.item_id and \
+                        qty != modifySold.quantity_sold or \
+                        price != modifySold.price_per_unit:
+                    modifySold.quantity_sold = qty
+                    modifySold.price_per_unit = price
+                    db_session.commit()
+                    flash('Either quantity or price were updated!')
+                    return redirect(url_for('displaySoldRecords'))
+                else:
+                    no_matched = True
+                    for row in SalesOfItems.query.all():
+                        if date_id == row._date_id and item_id == row.item_id:
+                            no_matched = False
+                            flash('{} and {} already in sold rec "{}" and "{}"'.format(date_id, item_id, modifySold, row))
+                            return render_template('editSoldRecords.html', _dates=_dates, names=names, modifySold=modifySold)
+                    if no_matched:
+                        modifySold._date_id = date_id
+                        modifySold.item_id = item_id
+                        modifySold.quantity_sold = qty
+                        modifySold.price_per_unit = price
+                        db_session.commit()
+                        flash('Data was updated succesfully!!')
+                        return redirect(url_for('displaySoldRecords'))
             except Exception as e:
                 db_session.rollback()
-                flash('Error, ' + str(e))
+                flash('Error  <br>'+ str(e))
+                return redirect(url_for('displaySoldRecords'))
 
-    return render_template('editSoldRecords.html', form=form, \
-                            modifySold=modifySold)
+    return render_template('editSoldRecords.html', \
+                            modifySold=modifySold, _dates=_dates, \
+                            names=names)

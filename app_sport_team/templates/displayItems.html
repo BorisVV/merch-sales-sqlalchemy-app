@@ -2,6 +2,7 @@
 {% block title %}displayItems{% endblock %}
 
 {% block content %}
+  <caption>Table of items in db.</caption>
   {% if items %}
     <table>
       <dd>
@@ -15,6 +16,9 @@
           <td>{{ item }}</td>
         </tr>
         {% endfor %}
+        <tr>
+          <td colspan="2" ><a href="{{ url_for('editItems') }}">edit/delete items</a></td>
+        </tr>
       </dd>
     </table>
     <p><a href="{{ url_for('addItems') }}">Add items</a> </p>

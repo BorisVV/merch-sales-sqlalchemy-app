@@ -4,10 +4,11 @@
 {% block tableItems %}{% endblock %}
 
 {% block content %}
+  <h3>Dates Schedules with city and states.</h3>
   <table>
-    <caption><h3>Table of game's dates!</h3></caption>
+    <caption>Table of game's dates!</caption>
     <tr>
-      <th>Index</th>
+      <th>No.</th>
       <th>Date</th>
       <th>City/State</th>
     </tr>
@@ -20,9 +21,9 @@
       </tr>
     {% endfor %}
   </table>
-  <h3>
-    Add more dates?  <a href="{{ url_for('addDates') }}">Link</a>
-  </h3>
+  <p>
+    Add more dates?  <a href="{{ url_for('addDates') }}">add dates</a>
+  </p>
 {% endblock %}
 {% block footer %}
 <a href="{{ url_for('index') }}">Go back to home page.</a>

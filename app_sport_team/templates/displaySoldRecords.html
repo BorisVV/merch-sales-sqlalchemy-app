@@ -3,7 +3,7 @@
 
 {% block content %}
   {% if itemsSold|length() == 0 %}
-  <p><h2>No items/records of sold items in database yet!</h2><br>
+  <p><h2>No records of sold items in database yet!</h2><br>
     Do you want to add some? <br>
     <a href="{{ url_for('addSoldRecord' )}}">Click here</a>
   </p>
@@ -12,7 +12,7 @@
     <table>
         <caption>Table of sold items!</caption>
         <tr>
-          <th>Index</th>
+          <th>No.</th>
           <th>Name</th>
           <th>Date</th>
           <th>City/State</th>
@@ -27,9 +27,9 @@
           <td>{{ row.games_schedules.game_date|dateformat }}</td>
           <td>{{ row.games_schedules.city }}, {{ row.games_schedules.state }}</td>
           <td>{{ row.quantity_sold }}</td>
-          <td>{{ '$ '|safe }} {{ row.price_per_unit }}</td>
+          <td>${{ row.price_per_unit }}</td>
           <td>{{ '$ '|safe }} {{ row.totalCost() }}</td>
-          <td><a href="{{ row.url }}">edit</a></td>
+          <td><a href="{{ row.url }}">edit/delete</a></td>
         </tr>
         {% endfor %}
     </table>
