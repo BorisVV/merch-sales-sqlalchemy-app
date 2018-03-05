@@ -13,9 +13,10 @@
         <a href="{{ url_for('addItems') }}">add items?</a>
       </p>
   {% else %}
-    <h4>First select the 'Date' and then an 'Item',<br>
+    <h2>Add Sold Records...</h2>
+    <h5>First select the 'Date' and then an 'Item',<br>
       then enter the quantity sold and the price per unit.
-    </h4>
+    </h5>
 
     <form method="post">
       <dd>
@@ -24,10 +25,10 @@
           <br>
           <select name="selected_date">
             {% for date in _dates %}
-            <option value="{{ date.id }}" {% if date.id == date_id %} selected {% endif %}> {{ date.game_date|dateformat }} {{ date.city }} {{ date.state }}</option>
+            <option value="{{ date.id }}" {% if date.id == date_id %} selected {% endif %}> {{ date._date|dateformat }} {{ date.city }} {{ date.state }}</option>
             {% endfor %}
           </select>
-          <sub><a href="{{ url_for('addDates') }}">add dates</a></sub>
+          <sub><a href="{{ url_for('addDates') }}">add more dates</a></sub>
 
           <br>
           <sub>Select item name:</sub>
@@ -39,7 +40,7 @@
               {{ item.name }} </option>
               {% endfor %}
             </select>
-            <sub><a href="{{ url_for('addDates') }}">add items</a></sub>
+            <sub><a href="{{ url_for('addItems') }}">add more items</a></sub>
 
             <br>
             <dt><sub>*Enter the quantity sold:</sub></dt>

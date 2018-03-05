@@ -2,6 +2,7 @@
 {% block title %}displayItems{% endblock %}
 
 {% block content %}
+  <h2>Displaying Items...</h2>
   <caption>Table of items in db.</caption>
   {% if items %}
     <table>
@@ -21,11 +22,13 @@
         </tr>
       </dd>
     </table>
-    <p><a href="{{ url_for('addItems') }}">Add items</a> </p>
+    <br>
+    <a href="{{ url_for('addItems') }}">Add items</a><br>
+    <a href="{{ url_for('displaySoldRecords') }}">Go to sold records</a>
   {% else %}
       <p>Sorry, but there are not item in db yet.</p>
       <p>Do you want to add items?</p>
-      <p><a href="{{ url_for('addItems') }}">Add Items</a> </p>
+      <p><a href="{{ url_for('addItems') }}">Add Items</a></p>
   {% endif %}
 {% endblock %}
 

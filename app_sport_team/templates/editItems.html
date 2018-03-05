@@ -6,18 +6,21 @@
     $(function() {
       $('input[name="delete"]').click(function() {
         if (!confirm("Do you really want to delete this Item?\n\n" +
-                     "THIS CANNOT BE UNDONE!"))
+                    "!!!WARNING!!! \n\n" +
+                    "DELETING THIS ITEM WILL DELETE ROWS THAT CONTAIN THIS ITEM IN SOLD RECORDS!"))
           return false;
       });
     });
   </script>
 
-  <h2>Edit or delete items...</h2>
+  <h2>Edit/Delete Items...</h2>
+
+  <p>!!Warning!! Deleting an item, will delete the ones in sold records too.</p>
 
   <form  method=post>
     <dl>
       <h4>Select one from the drop down box:</h4>
-      <select class="" name="item_selected">
+      <select class="" name="name_selected">
         {% for element in items %}
           <!-- <option {% if element.id %} selected {% endif %} -->
           <option
@@ -35,7 +38,8 @@
       <input type="submit" name="delete" value="Delete">
       <input type="submit" value="Cancel">
     </dl>
-    <a href="{{ url_for('displayItems') }}">Display all items</a>
+    <a href="{{ url_for('displayItems') }}">Display all items</a><br>
+    <a href="{{ url_for('displaySoldRecords') }}">Display sold records</a>
   </form>
 {% endblock %}
 

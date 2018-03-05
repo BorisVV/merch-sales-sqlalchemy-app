@@ -1,18 +1,19 @@
 {% extends "layout.html" %}
 
-{% block title %}Edit/Schedules{% endblock %}
+{% block title %}editDates{% endblock %}
 
 {% block content %}
 <script type=text/javascript>
 $(function() {
   $('input[name="delete"]').click(function() {
     if (!confirm("Do you really want to delete this Item?\n\n" +
-    "THIS WILL DELETE THE DATES IN SOLD RECORDS AS WELL."))
+                "!!!WARNING!!! \n\n" +
+                "THIS WILL DELETE THE DATES IN SOLD RECORDS AS WELL."))
     return false;
   });
 });
 </script>
-
+  <h2>Edit/Delete Dates...</h2>
   <h4>You have the choice to edit or delete the selected date.</h4>
   <p>Warning!!!</p>
   <p>
@@ -24,14 +25,14 @@ $(function() {
       <dl>
         Date: <br>
         <input type="date" name="date" value="{{ form['_date']|dateformat }}">
-        <sup>original date "{{ sched.game_date|dateformat }}"</sup>
+        <sup>original date "{{ sched._date|dateformat }}"</sup>
         <br><br>
         City: <br>
-        <input type="text" name="city" value="{{ form['city'] }}">
+        <input type="text" name="city" value="{{ form['city'] }}" required>
         <sup>original date "{{ sched.city }}"</sup>
         <br><br>
         State: <br>
-        <input type="text" name="state" value="{{ form['state'] }}">
+        <input type="text" name="state" value="{{ form['state'] }}" required>
         <sup>original date "{{ sched.state }}"</sup>
         <br>
 

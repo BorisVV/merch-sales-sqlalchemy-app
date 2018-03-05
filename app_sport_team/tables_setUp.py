@@ -34,12 +34,12 @@ Base.query = db_session.query_property()
 class MerchandiseItems(Base):
     ''' This class is for the brand for the merchandises'''
     # Name of table
-    __tablename__ = 'merchandise_items'
+    __tablename__ = 'items'
     id = Column(Integer, primary_key = True)
     name = Column(String(50), unique=True, nullable = False)
 
     # Another option.
-    # merchandise_items = relationship('MerchandiseItems', backref=backref('sales_of_items', uselist=True, cascade='delete,all'))
+    # items = relationship('MerchandiseItems', backref=backref('sold', uselist=True, cascade='delete,all'))
     # cascade='all, delete-orphan', single_parent=True, passive_deletes=True)
 
     def __repr__(self):
@@ -48,37 +48,37 @@ class MerchandiseItems(Base):
 
 
 
-class SalesOfItems(Base):
+class SoldRecords(Base):
     ''' This table is for the items sold in each game'''
-    __tablename__ = 'sales_of_items'
+    __tablename__ = 'sold'
 
     id = Column(Integer, primary_key = True)
-    item_id = Column(Integer, ForeignKey('merchandise_items.id'))
-    _date_id = Column(Integer, ForeignKey('games_schedules.id'))
-    quantity_sold = Column(Integer)
-    price_per_unit = Column(Float(2))
+    item_id = Column(Integer, ForeignKey('items.id'))
+    date_id = Column(Integer, ForeignKey('schedules.id'))
+    qty = Column(Integer)
+    price = Column(Float(2))
 
     # tables relations.
-    merchandise_items = relationship('MerchandiseItems', backref=backref('sales_of_items', lazy='joined'))# ondelete='CASCADE'
-    games_schedules = relationship('DatesOfGames', backref=backref('sales_of_items', lazy='joined'))
+    items = relationship('MerchandiseItems', backref=backref('sold', lazy='joined'))# ondelete='CASCADE'
+    schedules = relationship('GamesDates', backref=backref('sold', lazy='joined'))
 
     def totalCost(self):
-        return round((self.quantity_sold * self.price_per_unit), 2)
+        return round((self.qty * self.price), 2)
 
     @property
     def url(self):
         return url_for('editSoldRecords', id=self.id)
 
     def __repr__(self):
-        return "{} {}".format(self.quantity_sold, self.price_per_unit)
+        return "{} {}".format(self.qty, self.price)
 
 
-class DatesOfGames(Base):
+class GamesDates(Base):
     ''' This will store the game's dates table'''
-    __tablename__ = 'games_schedules'
+    __tablename__ = 'schedules'
     # Add columns
     id = Column(Integer, primary_key = True)
-    game_date = Column(DateTime, unique=True)
+    _date = Column(DateTime, unique=True)
     city = Column(String(50))
     state = Column(String(50))
 
@@ -87,6 +87,6 @@ class DatesOfGames(Base):
         return url_for('editDates', id=self.id)
 
     def __repr__(self):
-        return "{} {} {}".format(self.game_date, self.city, self.state)
+        return "{} {} {}".format(self._date, self.city, self.state)
 
 init_db()

@@ -29,7 +29,7 @@ from app_sport_team.views import routes
 # app.register_blueprint(routes.mod)
 #etc
 
-from app_sport_team.tables_setUp import db_session, MerchandiseItems, SalesOfItems, DatesOfGames
+from app_sport_team.tables_setUp import db_session, MerchandiseItems, SoldRecords, GamesDates
 
 from app_sport_team import utils
 app.jinja_env.filters['dateformat'] = utils.format_date_jinja

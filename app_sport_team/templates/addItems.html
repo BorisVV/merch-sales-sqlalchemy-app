@@ -2,7 +2,7 @@
 {% block title %}addItems{% endblock %}
 
 {% block content %}
-  <h3>Add new items to database.</h3>
+  <h2>Add Items...</h2>
   <form method=post>
     <dd>
       <dl>
@@ -10,9 +10,10 @@
         <input type="text" name="name" value="{{ new_name }}" size="30">
         <p>
           <input type="submit" value="Save">
-          <input type="submit" name="cancel" value="Cancel">      
+          <input type="submit" name="cancel" value="Cancel">
       </dl>
-      <a href="{{ url_for('displayItems') }}">Display all items.</a>
+      <a href="{{ url_for('displayItems') }}">Display all items.</a><br>
+      <a href="{{ url_for('addSoldRecord') }}">Go to add sold records.</a>
     </dd>
   </form>
 

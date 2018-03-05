@@ -8,7 +8,8 @@
     <a href="{{ url_for('addSoldRecord' )}}">Click here</a>
   </p>
   {% else %}
-    <h2>This is the table that stores the data for each of the games.</h2>
+    <h2>Displaying Sold Records...</h2>
+    <p>This is the table that stores the data for each of the games.</p>
     <table>
         <caption>Table of sold items!</caption>
         <tr>
@@ -23,11 +24,11 @@
         {% for row in itemsSold %}
         <tr>
           <td>{{ loop.index }}</td>
-          <td>{{ row.merchandise_items.name}}</td>
-          <td>{{ row.games_schedules.game_date|dateformat }}</td>
-          <td>{{ row.games_schedules.city }}, {{ row.games_schedules.state }}</td>
-          <td>{{ row.quantity_sold }}</td>
-          <td>${{ row.price_per_unit }}</td>
+          <td>{{ row.items.name}}</td>
+          <td>{{ row.schedules._date|dateformat }}</td>
+          <td>{{ row.schedules.city }}, {{ row.schedules.state }}</td>
+          <td>{{ row.qty }}</td>
+          <td>${{ row.price }}</td>
           <td>{{ '$ '|safe }} {{ row.totalCost() }}</td>
           <td><a href="{{ row.url }}">edit/delete</a></td>
         </tr>

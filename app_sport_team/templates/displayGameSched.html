@@ -4,7 +4,7 @@
 {% block tableItems %}{% endblock %}
 
 {% block content %}
-  <h3>Dates Schedules with city and states.</h3>
+  <h3>Displaying Schedules...</h3>
   <table>
     <caption>Table of game's dates!</caption>
     <tr>
@@ -15,7 +15,7 @@
     {% for element in _dates %}
       <tr>
         <td>{{ loop.index }}</td>
-        <td>{{ element.game_date|dateformat }}</td>
+        <td>{{ element._date|dateformat }}</td>
         <td>{{ element.city }}, {{ element.state }}</td>
         <td><a href="{{ element.url }}">edit</a> </td>
       </tr>
